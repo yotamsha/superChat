@@ -40,7 +40,12 @@ class Chat extends Component {
   }
 
   static propTypes = {
-    channels: PropTypes.arrayOf(channelType)
+    channels: PropTypes.arrayOf(channelType),
+    user: PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      firstName: PropTypes.string.isRequired,
+      lastName: PropTypes.string.isRequired
+    })
   }
 
   static defaultProps = {
@@ -61,12 +66,12 @@ class Chat extends Component {
   }
 
   async createMessage(channelId, message) {
-    const channel = await this._channelAPI.addMessageToChannel(channelId, message);
-    const channelIndex = _.findIndex(this.state.openChannels, {id: channelId});
-    this.state.openChannels[channelIndex] = channel;
-    this.setState({
-      openChannels: this.state.openChannels
-    })
+    const channel = await this._channelAPI.addMessageToChannel(channelId, message, this.props.user.id);
+    if (channelId === this.state.currentChannel.id) {
+      this.setState({
+        currentChannel: channel
+      })
+    }
   }
 
   render() {

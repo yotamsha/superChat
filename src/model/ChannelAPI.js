@@ -20,7 +20,7 @@ class ChannelAPI {
             users: [_.find(mockUsers, {id: userIds[0]})],
             parentChannel
         };
-        this._channels[channelId] = newChannel;
+        this._channels = _.concat(this._channels, newChannel) ;
         return newChannel;
     }
 
@@ -46,9 +46,10 @@ class ChannelAPI {
      * @param channelId
      * @param messageId
      */
-    async addMessageToChannel(channelId, message) {
+    async addMessageToChannel(channelId, message, userId) {
         const channel = _.find(this._channels, {id: channelId});
-        channel.messages = _.concat(channel.messages, {id: _.uniqueId('msg_'), text: message, user: mockUsers[0]});
+        const user = _.find(mockUsers, {id: userId})
+        channel.messages = _.concat(channel.messages, {id: _.uniqueId('msg_'), text: message, user});
         return await channel;
     }
 

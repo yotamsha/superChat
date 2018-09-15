@@ -14,9 +14,6 @@ const channelType = PropTypes.shape({
 })
 
 class NavigationBar extends Component {
-  constructor() {
-    super();
-  }
   static propTypes = {
     openChannels: PropTypes.arrayOf(channelType).isRequired,
     pendingChannels: PropTypes.arrayOf(channelType).isRequired,
