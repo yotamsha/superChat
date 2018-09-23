@@ -14,7 +14,7 @@ const userType = PropTypes.shape({
 
 function getUsersStr(users) {
   return _.reduce(users, (str, user)=> {
-    str += user.username + ", "
+    str += user.username + " "
     return str;
   }, '')
 }
@@ -29,6 +29,7 @@ class Channel extends Component {
     name: PropTypes.string.isRequired,
     openNewChannel: PropTypes.func.isRequired,
     createMessage: PropTypes.func.isRequired,
+    currentUser: userType
   }
 
   scrollToBottom = () => {
@@ -47,18 +48,21 @@ class Channel extends Component {
     return (
       <div className="channel-tab">
         <div className="tab-header">
-          <h3 className="channel-title">{this.props.name}</h3>
+          <h3 className="channel-title">{`${getUsersStr(this.props.users)} (${this.props.name})`}</h3>
           <div className="tab-users">
-            <span className="users">
-              {getUsersStr(this.props.users)}
-            </span>
+            {/*<span className="users">*/}
+              {/*{getUsersStr(this.props.users)}*/}
+            {/*</span>*/}
           </div>
         </div>
 
         <div className="tab-messages">
           <ul className="messages">
             {_.map(this.props.messages, msg =>
-              <li className="msg-row" key={msg.id}><a className="username" onClick={() => this.props.openNewChannel(this.props.id, [msg.user.id])}>{msg.user.username} > &nbsp;</a> {msg.text}
+              <li className="msg-row" key={msg.id}>
+                {msg.user.id !== this.props.currentUser.id ? (<a className="username other"
+                   onClick={() => this.props.openNewChannel(this.props.id, [msg.user])}>{msg.user.username} > &nbsp;
+                </a>) : <span className="username me"> {msg.user.username} > &nbsp;</span>} {msg.text}
                 {/*by: <button onClick={() => this.props.openNewChannel(this.props.id, [msg.user.id])}>*/}
                   {/*{msg.user.firstName} {msg.user.lastName}*/}
                 {/*</button>*/}

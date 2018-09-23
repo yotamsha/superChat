@@ -1,8 +1,12 @@
 import _ from 'lodash';
-import {mockUsers} from '../mocks'
-import {store} from '../store/index'
+import {mockUsers} from '../mocks';
+import {store} from '../store/index';
 
-const collectionName = 'channels'
+const collectionName = 'channels';
+const tenantId = 'FANLZucFAQUK6H9caIKC';
+function getUID() {
+  return Math.floor(Math.random() * 100000000);
+}
 
 export default {
     async getAll() {
@@ -10,15 +14,15 @@ export default {
     },
 
     onChannelChanges(channelId, cb) {
-      store.onDocumentChanges(collectionName, channelId, cb);
+      store.onDocumentChanges(tenantId, collectionName, channelId, cb);
     },
 
     onChannelMessagesChanges(channelId, cb) {
-      store.onDocumentRelatedChanges(collectionName, channelId, 'messages', cb);
+      store.onDocumentRelatedChanges(tenantId, collectionName, channelId, 'messages', cb);
     },
 
     onChanges(cb) {
-        store.onCollectionChanges(collectionName, cb);
+        store.onCollectionChanges(tenantId, collectionName, cb);
     },
     /**
      *
@@ -26,13 +30,15 @@ export default {
      * @param userIds
      * @returns {Promise<Channel>} id of the new created channel
      */
-    async createChannel(parentChannel, userIds) {
+    async createChannel(parentChannel, usersToAdd) {
+        const channelTitle = `#${getUID()}`;
         const newChannel = await {
-            title: 'New Channel',
-            users: [_.find(mockUsers, {id: userIds[0]})],
+            title: channelTitle,
+            createdAt: new Date().getTime(),
+            users: usersToAdd,
             parentChannel
         };
-        return store.createDocument(collectionName, newChannel);
+        return store.createDocument(tenantId, collectionName, newChannel);
     },
 
     /**
@@ -57,11 +63,10 @@ export default {
      * @param channelId
      * @param messageId
      */
-    async addMessageToChannel(channelId, message, userId) {
-        const user = _.find(mockUsers, {id: userId})
-        return await store.createRelated(collectionName, channelId, 'messages', {
+    async addMessageToChannel(channelId, message, user) {
+        return await store.createRelated(tenantId, collectionName, channelId, 'messages', {
             text: message,
-            createdAt: new Date(),
+            createdAt: new Date().getTime(),
             user
         });
     },

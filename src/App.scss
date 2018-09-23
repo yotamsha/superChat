@@ -40,7 +40,16 @@
 .chat {
   position: fixed;
   bottom: 0;
-  left:0;
+  right:0;
+  height: 300px;
+
+  .user-tab {
+    height: 120px;
+    width: 275px;
+    padding: 25px;
+    background-color: $primary-color;
+    color: #ffffff;
+  }
 
   .channel-tab {
     height: 300px;
@@ -91,10 +100,15 @@
         .msg-row {
           line-height: 25px;
           padding-left: 10px;
-          .username {
-            font-style: oblique;
-            color: #7b7979;
+          a {
             cursor: pointer;
+          }
+          .username {
+            &.me {
+              color: black;
+            }
+            font-style: oblique;
+            color: $primary-color;
           }
         }
       }

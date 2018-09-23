@@ -33,7 +33,14 @@
 .chat {
   position: fixed;
   bottom: 0;
-  left: 0; }
+  right: 0;
+  height: 300px; }
+  .chat .user-tab {
+    height: 120px;
+    width: 275px;
+    padding: 25px;
+    background-color: #039be5;
+    color: #ffffff; }
   .chat .channel-tab {
     height: 300px;
     width: 250px;
@@ -79,10 +86,13 @@
         .chat .channel-tab .tab-messages .messages .msg-row {
           line-height: 25px;
           padding-left: 10px; }
+          .chat .channel-tab .tab-messages .messages .msg-row a {
+            cursor: pointer; }
           .chat .channel-tab .tab-messages .messages .msg-row .username {
             font-style: oblique;
-            color: #7b7979;
-            cursor: pointer; }
+            color: #039be5; }
+            .chat .channel-tab .tab-messages .messages .msg-row .username.me {
+              color: black; }
       .chat .channel-tab .tab-messages .message-input {
         position: absolute;
         bottom: 0;

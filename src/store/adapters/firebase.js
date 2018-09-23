@@ -48,6 +48,9 @@ function snapshotDocumentToArray(doc) {
 
 // Get a reference to the database service
 //db.collection("users").get()
+
+const tenantsCollection = 'tenants';
+
 const dbActions = {
   getById: (collectionId, id) => {
     return db.ref(`${collectionId}/${id}`).once('value').then(function(snapshot) {
@@ -62,31 +65,31 @@ const dbActions = {
     });
   },
 
-  onDocumentChanges: (collectionId, docId, cb) => {
-    db.collection(collectionId).doc(docId).onSnapshot(snapshot => {
+  onDocumentChanges: (tenantId, collectionId, docId, cb) => {
+    db.collection(tenantsCollection).doc(tenantId).collection(collectionId).doc(docId).onSnapshot(snapshot => {
       cb(snapshotDocumentToArray(snapshot));
     });
   },
 
-  onDocumentRelatedChanges: (collectionId, docId, relatedCollectionId, cb) => {
-    db.collection(collectionId).doc(docId).collection(relatedCollectionId).onSnapshot(snapshot => {
+  onDocumentRelatedChanges: (tenantId, collectionId, docId, relatedCollectionId, cb) => {
+    db.collection(tenantsCollection).doc(tenantId).collection(collectionId).doc(docId).collection(relatedCollectionId).onSnapshot(snapshot => {
       cb(snapshotCollectionToArray(snapshot));
     });
   },
 
-  onCollectionChanges: (collectionId, cb) => {
-    db.collection(collectionId).onSnapshot(snapshot => {
+  onCollectionChanges: (tenantId, collectionId, cb) => {
+    db.collection(tenantsCollection).doc(tenantId).collection(collectionId).onSnapshot(snapshot => {
       cb(snapshotCollectionToArray(snapshot), snapshot.docChanges());
     });
   },
 
-  createDocument: (collectionName, newInstance) => {
-    var collectionRed = db.collection(collectionName);
+  createDocument: (tenantId, collectionName, newInstance) => {
+    var collectionRed = db.collection(tenantsCollection).doc(tenantId).collection(collectionName);
     collectionRed.add(newInstance);
   },
 
-  createRelated: (collectionName, docId, relatedCollection, newInstance) => {
-    var relatedRef = db.collection(collectionName).doc(docId).collection(relatedCollection);
+  createRelated: (tenantId, collectionName, docId, relatedCollection, newInstance) => {
+    var relatedRef = db.collection(tenantsCollection).doc(tenantId).collection(collectionName).doc(docId).collection(relatedCollection);
     relatedRef.add(newInstance);
   },
 
