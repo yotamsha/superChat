@@ -1,10 +1,25 @@
 import _ from 'lodash';
-import {mockChannels, mockUsers} from '../mocks'
+import {mockUsers} from '../mocks'
+import {store} from '../store/index'
 
-class ChannelAPI {
-    constructor() {
-        this._channels = mockChannels
-    }
+const collectionName = 'channels'
+
+export default {
+    async getAll() {
+      return store.getAll(collectionName);
+    },
+
+    onChannelChanges(channelId, cb) {
+      store.onDocumentChanges(collectionName, channelId, cb);
+    },
+
+    onChannelMessagesChanges(channelId, cb) {
+      store.onDocumentRelatedChanges(collectionName, channelId, 'messages', cb);
+    },
+
+    onChanges(cb) {
+        store.onCollectionChanges(collectionName, cb);
+    },
     /**
      *
      * @param parentChannel the parent channel to create a sub channel for. If not provided, will generate a root channel.
@@ -12,17 +27,13 @@ class ChannelAPI {
      * @returns {Promise<Channel>} id of the new created channel
      */
     async createChannel(parentChannel, userIds) {
-        const channelId = _.uniqueId('channel_')
         const newChannel = await {
             title: 'New Channel',
-            id: channelId,
-            messages: [],
             users: [_.find(mockUsers, {id: userIds[0]})],
             parentChannel
         };
-        this._channels = _.concat(this._channels, newChannel) ;
-        return newChannel;
-    }
+        return store.createDocument(collectionName, newChannel);
+    },
 
     /**
      * remove channel and all it's messages.
@@ -30,7 +41,7 @@ class ChannelAPI {
      */
     async removeChannel(channelId) {
 
-    }
+    },
 
     /**
      * Add user to channel
@@ -39,7 +50,7 @@ class ChannelAPI {
      */
     async addUserToChannel(channelId, userId) {
 
-    }
+    },
 
     /**
      * Add message to channel
@@ -47,11 +58,13 @@ class ChannelAPI {
      * @param messageId
      */
     async addMessageToChannel(channelId, message, userId) {
-        const channel = _.find(this._channels, {id: channelId});
         const user = _.find(mockUsers, {id: userId})
-        channel.messages = _.concat(channel.messages, {id: _.uniqueId('msg_'), text: message, user});
-        return await channel;
-    }
+        return await store.createRelated(collectionName, channelId, 'messages', {
+            text: message,
+            createdAt: new Date(),
+            user
+        });
+    },
 
     /**
      * Get all channels for a given userId
@@ -59,8 +72,6 @@ class ChannelAPI {
      * @param userId
      */
     async getChannelsByUserId(userId) {
-        return [this._channels[0], this._channels[1]];
+        //return [this._channels[0], this._channels[1]];
     }
 }
-
-export default ChannelAPI;

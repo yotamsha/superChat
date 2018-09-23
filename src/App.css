@@ -1,27 +1,95 @@
 .App {
-}
+  font-family: 'Roboto',sans-serif; }
+  .App h1, .App h2, .App h3, .App h4, .App h5, .App h6 {
+    margin: 0px;
+    font-weight: normal; }
+  .App ul {
+    list-style: none;
+    padding: 0;
+    margin: 0; }
 
 .App-logo {
   animation: App-logo-spin infinite 20s linear;
-  height: 80px;
-}
+  height: 80px; }
 
 .App-header {
   background-color: #222;
   height: 150px;
   padding: 20px;
-  color: white;
-}
+  color: white; }
 
 .App-title {
-  font-size: 1.5em;
-}
+  font-size: 1.5em; }
 
 .App-intro {
-  font-size: large;
-}
+  font-size: large; }
 
 @keyframes App-logo-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
+  from {
+    transform: rotate(0deg); }
+  to {
+    transform: rotate(360deg); } }
+
+.chat {
+  position: fixed;
+  bottom: 0;
+  left: 0; }
+  .chat .channel-tab {
+    height: 300px;
+    width: 250px;
+    float: left;
+    -webkit-box-shadow: inset 0px 1px 2px 0px rgba(204, 204, 204, 0.9);
+    -moz-box-shadow: inset 0px 1px 2px 0px rgba(204, 204, 204, 0.9);
+    box-shadow: inset 0px 1px 2px 0px rgba(204, 204, 204, 0.9);
+    border-bottom: 0px;
+    margin: 0px 10px 0px 0px;
+    border-radius: 5px 5px 0px 0px;
+    overflow: hidden; }
+    .chat .channel-tab .tab-header {
+      background-color: #039be5;
+      color: #fff;
+      padding: 15px;
+      height: 35px; }
+      .chat .channel-tab .tab-header .channel-title {
+        font-size: 16px;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap; }
+      .chat .channel-tab .tab-header .tab-users {
+        padding-top: 5px;
+        font-size: 12px;
+        height: 15px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis; }
+    .chat .channel-tab .tab-messages {
+      height: 230px;
+      position: relative;
+      background-color: #fdfdfd;
+      -webkit-box-shadow: inset 0px 2px 2px 0px rgba(204, 204, 204, 0.9);
+      -moz-box-shadow: inset 0px 2px 2px 0px rgba(204, 204, 204, 0.9);
+      box-shadow: inset 0px 2px 2px 0px rgba(204, 204, 204, 0.9); }
+      .chat .channel-tab .tab-messages .messages {
+        list-style: none;
+        padding: 15px 0px 0px 10px;
+        font-size: 14px;
+        margin: 0;
+        height: 180px;
+        overflow: scroll; }
+        .chat .channel-tab .tab-messages .messages .msg-row {
+          line-height: 25px;
+          padding-left: 10px; }
+          .chat .channel-tab .tab-messages .messages .msg-row .username {
+            font-style: oblique;
+            color: #7b7979;
+            cursor: pointer; }
+      .chat .channel-tab .tab-messages .message-input {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        height: 30px; }
+        .chat .channel-tab .tab-messages .message-input input {
+          height: 100%;
+          width: 80%; }
+        .chat .channel-tab .tab-messages .message-input button {
+          height: 100%; }

@@ -1,0 +1,116 @@
+@import "css/variables.scss";
+.App {
+  font-family: 'Roboto',sans-serif;
+  h1, h2, h3, h4, h5, h6 {
+    margin: 0px;
+    font-weight: normal;
+  }
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+}
+
+.App-logo {
+  animation: App-logo-spin infinite 20s linear;
+  height: 80px;
+}
+
+.App-header {
+  background-color: #222;
+  height: 150px;
+  padding: 20px;
+  color: white;
+}
+
+.App-title {
+  font-size: 1.5em;
+}
+
+.App-intro {
+  font-size: large;
+}
+
+@keyframes App-logo-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.chat {
+  position: fixed;
+  bottom: 0;
+  left:0;
+
+  .channel-tab {
+    height: 300px;
+    width: 250px;
+    float: left;
+    -webkit-box-shadow: inset 0px 1px 2px 0px rgba(204,204,204,0.90);
+    -moz-box-shadow: inset 0px 1px 2px 0px rgba(204,204,204,0.90);
+    box-shadow: inset 0px 1px 2px 0px rgba(204,204,204,0.90);
+    border-bottom: 0px;
+    margin: 0px 10px 0px 0px;
+    border-radius: 5px 5px 0px 0px;
+    overflow: hidden;
+    .tab-header {
+      background-color: $primary-color;
+      color: #fff;
+      padding: 15px;
+      height: 35px;
+      .channel-title {
+        font-size: 16px;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+      }
+      .tab-users {
+        padding-top: 5px;
+        font-size: 12px;
+        height: 15px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+    }
+
+    .tab-messages {
+      height: 230px;
+      position: relative;
+      background-color: #fdfdfd;
+      -webkit-box-shadow: inset 0px 2px 2px 0px rgba(204,204,204,0.90);
+      -moz-box-shadow: inset 0px 2px 2px 0px rgba(204,204,204,0.90);
+      box-shadow: inset 0px 2px 2px 0px rgba(204,204,204,0.90);
+      .messages {
+        list-style: none;
+        padding: 15px 0px 0px 10px;
+        font-size: 14px;
+        margin: 0;
+        height: 180px;
+        overflow: scroll;
+        .msg-row {
+          line-height: 25px;
+          padding-left: 10px;
+          .username {
+            font-style: oblique;
+            color: #7b7979;
+            cursor: pointer;
+          }
+        }
+      }
+      .message-input {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        height: 30px;
+        input {
+          height: 100%;
+          width: 80%;
+        }
+        button {
+          height: 100%;
+        }
+      }
+    }
+  }
+}

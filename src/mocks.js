@@ -1,9 +1,9 @@
 
 const mockUsers = [
-  {id: '1', firstName: 'Avi', lastName: 'Cohen'},
-  {id: '2', firstName: 'Dana', lastName: 'Cohen'},
-  {id: '3', firstName: 'Meir', lastName: 'Cohen'},
-  {id: '4', firstName: 'Shoshi', lastName: 'Cohen'},
+  {id: '1', firstName: 'Avi', lastName: 'Cohen', username: 'Aviii'},
+  {id: '2', firstName: 'Dana', lastName: 'Cohen',  username: 'Yaell'},
+  {id: '3', firstName: 'Meir', lastName: 'Cohen',  username: 'Longlonglonglongolong long'},
+  {id: '4', firstName: 'Shoshi', lastName: 'Cohen',  username: 'A random Guy'},
 ];
 const mockMessages = [
   {

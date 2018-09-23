@@ -9,11 +9,19 @@ const messageType = PropTypes.shape({
 
 const userType = PropTypes.shape({
   id: PropTypes.string.isRequired,
-  firstName: PropTypes.string.isRequired,
-  lastName: PropTypes.string.isRequired
+  username: PropTypes.string.isRequired
 })
 
+function getUsersStr(users) {
+  return _.reduce(users, (str, user)=> {
+    str += user.username + ", "
+    return str;
+  }, '')
+}
 class Channel extends Component {
+  constructor() {
+    super();
+  }
   static propTypes = {
     id: PropTypes.string.isRequired,
     messages: PropTypes.arrayOf(messageType),
@@ -23,30 +31,46 @@ class Channel extends Component {
     createMessage: PropTypes.func.isRequired,
   }
 
+  scrollToBottom = () => {
+    this.messagesEnd.scrollIntoView({ behavior: "instant" });
+  }
+
+  componentDidMount() {
+    this.scrollToBottom();
+  }
+
+  componentDidUpdate() {
+    this.scrollToBottom();
+  }
+
   render() {
     return (
-      <div className="channel">
-        <h1>{this.props.name}</h1>
-        <h2>Users</h2>
-        <ul className="users">
-          {_.map(this.props.users, user =>
-            <li key={user.id}>
-              {user.firstName} {user.lastName}
+      <div className="channel-tab">
+        <div className="tab-header">
+          <h3 className="channel-title">{this.props.name}</h3>
+          <div className="tab-users">
+            <span className="users">
+              {getUsersStr(this.props.users)}
+            </span>
+          </div>
+        </div>
+
+        <div className="tab-messages">
+          <ul className="messages">
+            {_.map(this.props.messages, msg =>
+              <li className="msg-row" key={msg.id}><a className="username" onClick={() => this.props.openNewChannel(this.props.id, [msg.user.id])}>{msg.user.username} > &nbsp;</a> {msg.text}
+                {/*by: <button onClick={() => this.props.openNewChannel(this.props.id, [msg.user.id])}>*/}
+                  {/*{msg.user.firstName} {msg.user.lastName}*/}
+                {/*</button>*/}
               </li>)}
-        </ul>
-        <h2>Messages</h2>
-        <ul className="messages">
-          {_.map(this.props.messages, msg =>
-            <li key={msg.id}>{msg.text},
-              by: <button onClick={() => this.props.openNewChannel(this.props.id, [msg.user.id])}>
-                {msg.user.firstName} {msg.user.lastName}
-                </button>
-            </li>)}
-        </ul>
+              <li id={this.props.id} ref={(el) => { this.messagesEnd = el; }}></li>
+          </ul>
 
-        <input placeholder="Write something here.." onBlur={(event) => this.setState({newMessage: event.target.value})}></input>
-        <button type="submit" onClick={() => this.props.createMessage(this.props.id, this.state.newMessage)}>Send</button>
-
+          <div className="message-input">
+            <input placeholder="Write something here.." onBlur={(event) => this.setState({newMessage: event.target.value})}></input>
+            <button type="submit" onClick={() => this.props.createMessage(this.props.id, this.state.newMessage)}>Send</button>
+          </div>
+        </div>
       </div>
     );
   }
