@@ -59,9 +59,9 @@ class Chat extends Component {
   //   })
   // }
 
-  async openNewChannel(parentChannel, users) {
+  async openNewChannel(users) {
     // todo Only allow to open a single channel with a user.
-    return await ChannelAPI.createChannel(parentChannel, users)
+    return await ChannelAPI.createChannel(users)
   }
 
   async createMessage(channelId, message) {
@@ -110,7 +110,7 @@ class Chat extends Component {
             createMessage={this.createMessage.bind(this)}
             name={channel.title}
             messages={channel.messages}
-            users={channel.users}>
+            members={channel.members}>
           </Channel>
         ))}
       </div>

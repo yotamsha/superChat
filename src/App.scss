@@ -62,8 +62,14 @@
     margin: 0px 10px 0px 0px;
     border-radius: 5px 5px 0px 0px;
     overflow: hidden;
+    outline: 0;
+    &:focus {
+      .tab-header {
+        background-color: $primary-color;
+      }
+    }
     .tab-header {
-      background-color: $primary-color;
+      background-color: #c3d0d6;
       color: #fff;
       padding: 15px;
       height: 35px;

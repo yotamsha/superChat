@@ -1,9 +1,9 @@
 import _ from 'lodash';
 import React, {Component} from 'react';
-import UserContext from './contexts/UserContext';
 import Chat from './Chat';
 import './App.css';
 import ChannelAPI from './model/ChannelAPI'
+import UserAPI from "./model/UserAPI";
 
 /**
  *
@@ -54,6 +54,14 @@ function mergeCollectionChanges(collection, updatedCollection) {
 
 }
 
+function channelsDataRetrieved(updatedData) {
+  const updatedChannels = mergeCollectionChanges(this.state.channels, updatedData);
+  addMessagesListeners.call(this, updatedChannels);
+  this.setState({
+    channels: _(updatedChannels).sortBy('createdAt').reverse().value()
+  });
+}
+
 function addMessagesListeners(channels) {
   // TODO add / remove listeners to channel changes
   // listen to changes to any messages on the open channels
@@ -71,27 +79,20 @@ class App extends Component {
   constructor() {
     super();
     this.state = {
-      channels: []
+      channels: [],
+      currentUser: UserAPI.getCurrentUser()
     };
 
     // listen to any changes in the channels list
-    ChannelAPI.onChanges((updatedData) => {
-      const updatedChannels = mergeCollectionChanges(this.state.channels, updatedData);
-      addMessagesListeners.call(this, updatedChannels);
-      this.setState({
-        channels: _(updatedChannels).sortBy('createdAt').reverse().value()
-      });
-    })
+    ChannelAPI.onPublicChannelsChanges(channelsDataRetrieved.bind(this))
+    ChannelAPI.onPrivateChannelsChanges(this.state.currentUser.id, channelsDataRetrieved.bind(this))
+
 
   }
   render() {
     return (
       <div className="App">
-        <UserContext.Consumer>
-          {({user}) => (
-            <Chat user={user} channels={this.state.channels}></Chat>
-          )}
-        </UserContext.Consumer>
+        <Chat user={this.state.currentUser} channels={this.state.channels}></Chat>
       </div>
     );
   }

@@ -1,11 +1,20 @@
 import _ from 'lodash';
-import {mockUsers} from '../mocks';
 import {store} from '../store/index';
 
 const collectionName = 'channels';
 const tenantId = 'FANLZucFAQUK6H9caIKC';
 function getUID() {
   return Math.floor(Math.random() * 100000000);
+}
+
+async function populatedListWithRelatedCollection(list, fieldToPopulate, populateFromCollection,) {
+  //const populatedResults = await
+  //Promise.all()
+
+  return (await Promise.all(list.map(async item => {
+    const members = await store.populateFromCollection(tenantId, populateFromCollection, item[fieldToPopulate]);
+    return _.assign({}, item, {members})
+  })));
 }
 
 export default {
@@ -21,22 +30,43 @@ export default {
       store.onDocumentRelatedChanges(tenantId, collectionName, channelId, 'messages', cb);
     },
 
-    onChanges(cb) {
-        store.onCollectionChanges(tenantId, collectionName, cb);
+    async onPublicChannelsChanges(cb) {
+       const filters = [{
+          field: 'isPublic',
+          condition: '==',
+          value: true,
+        }]
+        store.onCollectionChanges(tenantId, collectionName, filters, async (results) => {
+          let populatedResults = await populatedListWithRelatedCollection(results, 'members', 'users');
+          cb(populatedResults);
+        });
     },
+
+    onPrivateChannelsChanges(userId, cb) {
+      const filters = [{
+        field: 'members',
+        condition: 'array-contains',
+        value: userId,
+      }];
+      store.onCollectionChanges(tenantId, collectionName, filters, async (results) => {
+        let populatedResults = await populatedListWithRelatedCollection(results, 'members', 'users');
+        cb(populatedResults);
+      });
+    },
+
     /**
      *
      * @param parentChannel the parent channel to create a sub channel for. If not provided, will generate a root channel.
      * @param userIds
      * @returns {Promise<Channel>} id of the new created channel
      */
-    async createChannel(parentChannel, usersToAdd) {
+    async createChannel(usersToAdd) {
         const channelTitle = `#${getUID()}`;
-        const newChannel = await {
+        const newChannel = {
             title: channelTitle,
             createdAt: new Date().getTime(),
-            users: usersToAdd,
-            parentChannel
+            members: usersToAdd,
+            isPublic: false
         };
         return store.createDocument(tenantId, collectionName, newChannel);
     },

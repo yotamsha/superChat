@@ -1,5 +1,5 @@
 import firebase from 'firebase'
-import {store} from "../index";
+import _ from "lodash";
 
 var config = {
   apiKey: "AIzaSyA7Tzt7Whc6uY9YCBeiCrIgUm9r3qXFEMU",
@@ -53,13 +53,13 @@ const tenantsCollection = 'tenants';
 
 const dbActions = {
   getById: (collectionId, id) => {
-    return db.ref(`${collectionId}/${id}`).once('value').then(function(snapshot) {
+    return db.ref(`${collectionId}/${id}`).once('value').then(function (snapshot) {
       return snapshot.val();
     });
   },
 
   getAll: (collectionId) => {
-    return db.collection(collectionId).get().then(function(snapshot) {
+    return db.collection(collectionId).get().then(function (snapshot) {
       return snapshotCollectionToArray(snapshot)
       return snapshot;
     });
@@ -77,8 +77,13 @@ const dbActions = {
     });
   },
 
-  onCollectionChanges: (tenantId, collectionId, cb) => {
-    db.collection(tenantsCollection).doc(tenantId).collection(collectionId).onSnapshot(snapshot => {
+  onCollectionChanges: (tenantId, collectionId, filters, cb) => {
+    let collectionRef = db.collection(tenantsCollection).doc(tenantId).collection(collectionId);
+    filters.forEach(filter => {
+      collectionRef = collectionRef.where(filter.field, filter.condition, filter.value);
+    });
+
+    collectionRef.onSnapshot(snapshot => {
       cb(snapshotCollectionToArray(snapshot), snapshot.docChanges());
     });
   },
@@ -93,12 +98,30 @@ const dbActions = {
     relatedRef.add(newInstance);
   },
 
+  populateFromCollection: async (tenantId, collectionId, ids = []) => {
+    const collectionRef = db.collection(tenantsCollection).doc(tenantId).collection(collectionId);
+
+    let results = [];
+    try {
+      results = (await Promise.all(ids.map(id => collectionRef.doc(id).get())))
+        .filter(doc => doc.exists)
+        .map(doc =>  _.defaults({id: doc.id, }, doc.data()));
+
+    } catch (error) {
+      console.error(`received an error in populateFromCollection method for collection ${collectionId}:`, error);
+      return results;
+
+    }
+
+    return results;
+  },
+
   login: async () => {
     return firebase.auth().signInAnonymously()
   },
 
   onAuthStateChanged: (cb) => {
-    firebase.auth().onAuthStateChanged(function(user) {
+    firebase.auth().onAuthStateChanged(function (user) {
       if (user) {
         // User is signed in.
         let isAnonymous = user.isAnonymous;
