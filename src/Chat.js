@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import sessionProvider from './services/sessionProvider';
 import Channel from './Channel';
 import ChannelAPI from './model/ChannelAPI';
-import UserAPI from "./model/UserAPI";
 
 const messageType = PropTypes.shape({
   id: PropTypes.string,
@@ -47,7 +46,7 @@ class Chat extends Component {
   componentWillReceiveProps(newProps) {
     if (!this.state.activeTab) {
       this.setState({
-        activeTab:  newProps.channels.length && newProps.channels[0].id
+        activeTab: newProps.channels.length && newProps.channels[0].id
       });
     }
   }
@@ -60,6 +59,8 @@ class Chat extends Component {
   async createMessage(channelId, message) {
     return ChannelAPI.addMessageToChannel(channelId, message, this.props.user);
   }
+  // TODO show some public channels and some private channels according to configuration -
+  // TODO public channels can have some UI which allows to navigate between them.
 
   render() {
     return (

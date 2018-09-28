@@ -55,11 +55,18 @@ function mergeCollectionChanges(collection, updatedCollection) {
 
 }
 
+function getRelevantChannels(allChannels) {
+  const publicChannels = _(allChannels).filter('isPublic').takeRight(1).value();
+  const privateChannels = _(allChannels).reject('isPublic').sortBy('createdAt').takeRight(3).value();
+  return _.concat(publicChannels, privateChannels);
+
+}
 function channelsDataRetrieved(updatedData) {
   const updatedChannels = mergeCollectionChanges(this.state.channels, updatedData);
   addMessagesListeners.call(this, updatedChannels);
   this.setState({
-    channels: _(updatedChannels).sortBy('createdAt').reverse().value()
+    allChannels: updatedChannels,
+    channels: getRelevantChannels(updatedChannels)
   });
 }
 
@@ -69,8 +76,10 @@ function addMessagesListeners(channels) {
   channels.forEach(channel => {
     ChannelAPI.onChannelMessagesChanges(channel.id, messages => {
       messages = _.sortBy(messages, 'createdAt');
+      const updatedChannels = updateItemInCollection(this.state.allChannels, {id: channel.id, messages});
       this.setState({
-        channels: updateItemInCollection(this.state.channels, {id: channel.id, messages})
+        allChannels: updatedChannels,
+        channels: getRelevantChannels(updatedChannels)
       });
     })
   })
