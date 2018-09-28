@@ -1,10 +1,11 @@
 import {store} from '../store/index'
 import React from "react";
 import sessionProvider from "../services/sessionProvider";
+import config from '../config'
+const collectionId = 'users'
+const tenantId = config.defaultTenantId;
 
-//const collectionName = 'users'
-
-export default {
+const UserAPI = {
   login: async () => {
     return store.login();
   },
@@ -23,7 +24,12 @@ export default {
 
   getCurrentUser: () => {
     const sessionUser = sessionProvider.has('user') && JSON.parse(sessionProvider.get('user'))
-    return sessionUser || this.getDefaultUser()
-  }
+    return sessionUser || UserAPI.getDefaultUser()
+  },
 
-}
+  createUser: user => {
+    store.createDocument(tenantId, collectionId, user)
+  }
+};
+
+export default UserAPI;

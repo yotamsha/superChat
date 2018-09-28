@@ -4,6 +4,7 @@ import Chat from './Chat';
 import './App.css';
 import ChannelAPI from './model/ChannelAPI'
 import UserAPI from "./model/UserAPI";
+import sessionProvider from "./services/sessionProvider";
 
 /**
  *
@@ -75,6 +76,26 @@ function addMessagesListeners(channels) {
   })
 }
 
+async function loginUser(username) {
+  UserAPI.onAuthStateChanged(async user => {
+    if (user) {
+      console.log('user logged!', user)
+      const newUser = _.assign({}, this.state.currentUser, {id: user.uid, username});
+      await UserAPI.createUser(newUser);
+      sessionProvider.set('user', JSON.stringify(newUser))
+      this.setState({
+        currentUser: newUser
+      })
+      ChannelAPI.onPrivateChannelsChanges(this.state.currentUser.id, channelsDataRetrieved.bind(this))
+    } else {
+      console.log('User logged out.')
+    }
+
+  });
+
+  return UserAPI.login()
+}
+
 class App extends Component {
   constructor() {
     super();
@@ -85,14 +106,14 @@ class App extends Component {
 
     // listen to any changes in the channels list
     ChannelAPI.onPublicChannelsChanges(channelsDataRetrieved.bind(this))
-    ChannelAPI.onPrivateChannelsChanges(this.state.currentUser.id, channelsDataRetrieved.bind(this))
-
-
+    if (this.state.currentUser.id) {
+      ChannelAPI.onPrivateChannelsChanges(this.state.currentUser.id, channelsDataRetrieved.bind(this))
+    }
   }
   render() {
     return (
       <div className="App">
-        <Chat user={this.state.currentUser} channels={this.state.channels}></Chat>
+        <Chat user={this.state.currentUser} channels={this.state.channels} loginUser={loginUser.bind(this)}></Chat>
       </div>
     );
   }

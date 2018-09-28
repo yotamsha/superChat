@@ -17,16 +17,10 @@ const channelType = PropTypes.shape({
   messages: PropTypes.arrayOf(messageType),
 })
 
-function getMainChannel(channels) {
-  return channels[0];
-}
-
-function getOpenChannels(channels) {
-  return channels;
-}
-
-function getPendingChannels(channels) {
-  return channels;
+function switchActiveChannel(channelId) {
+  this.setState({
+    activeTab: channelId
+  })
 }
 
 class Chat extends Component {
@@ -34,11 +28,7 @@ class Chat extends Component {
     super(props);
 
     this.chosenUsername = props.user.username;
-    this.state = {
-      currentChannel: getMainChannel(props.channels),
-      openChannels: getOpenChannels(this.props.channels),
-      user: props.user
-    };
+    this.state = {};
   }
 
   static propTypes = {
@@ -46,18 +36,21 @@ class Chat extends Component {
     user: PropTypes.shape({
       id: PropTypes.string,
       username: PropTypes.string.isRequired
-    })
+    }),
+    loginUser: PropTypes.func.isRequired
   }
 
   static defaultProps = {
     channels: []
   }
 
-  // switchChannel(channelId) {
-  //   this.setState({
-  //     currentChannel: _.find(this.state.openChannels, {id: channelId})
-  //   })
-  // }
+  componentWillReceiveProps(newProps) {
+    if (!this.state.activeTab) {
+      this.setState({
+        activeTab:  newProps.channels.length && newProps.channels[0].id
+      });
+    }
+  }
 
   async openNewChannel(users) {
     // todo Only allow to open a single channel with a user.
@@ -65,50 +58,29 @@ class Chat extends Component {
   }
 
   async createMessage(channelId, message) {
-    return ChannelAPI.addMessageToChannel(channelId, message, this.state.user);
-  }
-
-  async loginUser(username) {
-    UserAPI.onAuthStateChanged((user) => {
-      if (user) {
-        console.log('user logged!', user)
-        const newUser = _.assign({}, this.state.user, {id: user.uid, username});
-        sessionProvider.set('user', JSON.stringify(newUser))
-        this.setState({
-          user: newUser
-        })
-      } else {
-        console.error('User logged out.')
-      }
-
-    });
-
-    return UserAPI.login()
+    return ChannelAPI.addMessageToChannel(channelId, message, this.props.user);
   }
 
   render() {
     return (
       <div className="chat">
-        {/*<NavigationBar*/}
-        {/*switchChannel={this.switchChannel.bind(this)}*/}
-        {/*openChannels={this.state.openChannels}*/}
-        {/*pendingChannels={getPendingChannels(this.props.channels)}>*/}
-        {/*</NavigationBar>*/}
-        {!this.state.user.id && (<div className="user-tab">
+        {!this.props.user.id && (<div className="user-tab">
           Hey, put your name here.
           <br/>
           <br/>
-          <input defaultValue={this.state.user.username} onBlur={(event) => {this.chosenUsername = event.target.value}}></input>
-          <button type="submit" onClick={() => this.loginUser(this.chosenUsername)}>Send</button>
+          <input defaultValue={this.props.user.username} onBlur={(event) => {this.chosenUsername = event.target.value}}></input>
+          <button type="submit" onClick={() => this.props.loginUser(this.chosenUsername)}>Send</button>
         </div>)}
-        {this.state.user.id && _.map(this.props.channels, channel => (
+        {this.props.user.id && _.map(this.props.channels, channel => (
           <Channel
             key={channel.id}
             id={channel.id}
-            currentUser={this.state.user}
+            currentUser={this.props.user}
             openNewChannel={this.openNewChannel.bind(this)}
             createMessage={this.createMessage.bind(this)}
+            onFocus={switchActiveChannel.bind(this)}
             name={channel.title}
+            isActive={channel.id === this.state.activeTab}
             messages={channel.messages}
             members={channel.members}>
           </Channel>

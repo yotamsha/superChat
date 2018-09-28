@@ -44,7 +44,7 @@
   .chat .channel-tab {
     height: 300px;
     width: 250px;
-    float: left;
+    float: right;
     -webkit-box-shadow: inset 0px 1px 2px 0px rgba(204, 204, 204, 0.9);
     -moz-box-shadow: inset 0px 1px 2px 0px rgba(204, 204, 204, 0.9);
     box-shadow: inset 0px 1px 2px 0px rgba(204, 204, 204, 0.9);
@@ -53,7 +53,7 @@
     border-radius: 5px 5px 0px 0px;
     overflow: hidden;
     outline: 0; }
-    .chat .channel-tab:focus .tab-header {
+    .chat .channel-tab.active .tab-header {
       background-color: #039be5; }
     .chat .channel-tab .tab-header {
       background-color: #c3d0d6;

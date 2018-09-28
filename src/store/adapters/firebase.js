@@ -89,12 +89,17 @@ const dbActions = {
   },
 
   createDocument: (tenantId, collectionName, newInstance) => {
-    var collectionRed = db.collection(tenantsCollection).doc(tenantId).collection(collectionName);
-    collectionRed.add(newInstance);
+    let collectionRef = db.collection(tenantsCollection).doc(tenantId).collection(collectionName);
+    if (newInstance.id) {
+      collectionRef = collectionRef.doc(newInstance.id)
+      collectionRef.set(_.omit(newInstance, 'id'));
+    } else {
+      collectionRef.add(newInstance);
+    }
   },
 
   createRelated: (tenantId, collectionName, docId, relatedCollection, newInstance) => {
-    var relatedRef = db.collection(tenantsCollection).doc(tenantId).collection(collectionName).doc(docId).collection(relatedCollection);
+    const relatedRef = db.collection(tenantsCollection).doc(tenantId).collection(collectionName).doc(docId).collection(relatedCollection);
     relatedRef.add(newInstance);
   },
 
