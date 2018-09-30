@@ -1,5 +1,4 @@
 import {store} from '../store/index'
-import React from "react";
 import sessionProvider from "../services/sessionProvider";
 import config from '../config'
 const collectionId = 'users'

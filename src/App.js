@@ -15,8 +15,6 @@ import sessionProvider from "./services/sessionProvider";
  *
  * 2) show all members of a chat
  *
- * 3) Split to public and private channels (customerId is initialized with one main public channel by default configuration)
- *
  * 4) Work on UI:
  * - a cool feature could be that when hovering on a username you can choose to start a private channel
  * or add to an open existing channel

@@ -1,8 +1,9 @@
 import _ from 'lodash';
 import {store} from '../store/index';
+import config from '../config'
 
 const collectionName = 'channels';
-const tenantId = 'FANLZucFAQUK6H9caIKC';
+const tenantId = config.defaultTenantId;
 function getUID() {
   return Math.floor(Math.random() * 100000000);
 }

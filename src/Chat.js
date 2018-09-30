@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
-import sessionProvider from './services/sessionProvider';
 import Channel from './Channel';
 import ChannelAPI from './model/ChannelAPI';
 

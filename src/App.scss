@@ -103,7 +103,7 @@
         font-size: 14px;
         margin: 0;
         height: 180px;
-        overflow: scroll;
+        overflow-y: scroll;
         .msg-row {
           line-height: 25px;
           padding-left: 10px;
@@ -126,7 +126,7 @@
         height: 30px;
         input {
           height: 100%;
-          width: 80%;
+          width: 78%;
         }
         button {
           height: 100%;

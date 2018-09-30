@@ -84,7 +84,7 @@ class Channel extends Component {
           <div className="message-input">
             <input value={this.state.newMessage} placeholder="" onFocus={this.onInputFocus.bind(this)}
                    onKeyPress={(e) => {
-                     if (e.key == 'Enter') {
+                     if (e.key === 'Enter') {
                        this.submitMessage()
                      }
                    }}

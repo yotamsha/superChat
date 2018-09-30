@@ -1,4 +1,6 @@
-import firebase from 'firebase'
+import firebase from 'firebase/app'
+import 'firebase/firestore'
+import 'firebase/auth'
 import _ from "lodash";
 
 var config = {
@@ -30,25 +32,6 @@ function snapshotDocumentToArray(doc) {
   return Object.assign({id: doc.id}, doc.data());
 }
 
-
-//
-// firebase.auth().onAuthStateChanged(function(user) {
-//   if (user) {
-//     // User is signed in.
-//     var isAnonymous = user.isAnonymous;
-//     var uid = user.uid;
-//     // ...
-//     console.log('user logged: ' + uid)
-//   } else {
-//     // User is signed out.
-//     // ...
-//   }
-//   // ...
-// });
-
-// Get a reference to the database service
-//db.collection("users").get()
-
 const tenantsCollection = 'tenants';
 
 const dbActions = {
@@ -61,7 +44,6 @@ const dbActions = {
   getAll: (collectionId) => {
     return db.collection(collectionId).get().then(function (snapshot) {
       return snapshotCollectionToArray(snapshot)
-      return snapshot;
     });
   },
 
@@ -129,8 +111,6 @@ const dbActions = {
     firebase.auth().onAuthStateChanged(function (user) {
       if (user) {
         // User is signed in.
-        let isAnonymous = user.isAnonymous;
-        let uid = user.uid;
         cb(user);
       } else {
         // User is signed out.
