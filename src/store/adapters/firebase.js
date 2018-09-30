@@ -5,11 +5,11 @@ import _ from "lodash";
 
 var config = {
   apiKey: "AIzaSyA7Tzt7Whc6uY9YCBeiCrIgUm9r3qXFEMU",
-  authDomain: "superchat-e7dbf.firebaseapp.com",
-  databaseURL: "https://superchat-e7dbf.firebaseio.com",
+  //authDomain: "superchat-e7dbf.firebaseapp.com",
+  //databaseURL: "https://superchat-e7dbf.firebaseio.com",
   projectId: "superchat-e7dbf",
-  storageBucket: "superchat-e7dbf.appspot.com",
-  messagingSenderId: "933253543537"
+  //storageBucket: "superchat-e7dbf.appspot.com",
+  //messagingSenderId: "933253543537"
 };
 firebase.initializeApp(config);
 // Initialize Cloud Firestore through Firebase
@@ -105,6 +105,10 @@ const dbActions = {
 
   login: async () => {
     return firebase.auth().signInAnonymously()
+  },
+
+  logout: async () => {
+    return firebase.auth().signOut()
   },
 
   onAuthStateChanged: (cb) => {

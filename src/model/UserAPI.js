@@ -4,6 +4,9 @@ import config from '../config'
 const collectionId = 'users'
 const tenantId = config.defaultTenantId;
 
+function getSessionUser() {
+  return sessionProvider.has(tenantId) && JSON.parse(sessionProvider.get(tenantId)).user;
+}
 const UserAPI = {
   login: async () => {
     return store.login();
@@ -11,7 +14,20 @@ const UserAPI = {
 
   onAuthStateChanged: (cb) => {
     // TODO add user to users collection if it doesn't exist.
-    store.onAuthStateChanged(cb);
+    store.onAuthStateChanged(storedUser => {
+      cb(storedUser)
+    });
+  },
+
+  validateSession: storedUser => {
+    if (storedUser) {
+      const sessionUser = getSessionUser();
+      if (!sessionUser || storedUser.uid !== sessionUser.id) {
+        // user is authenticated with a different tenant.
+        console.log('logging out invalid user.');
+        store.logout();
+      }
+    }
   },
 
   getDefaultUser: () => {
@@ -22,12 +38,12 @@ const UserAPI = {
   },
 
   getCurrentUser: () => {
-    const sessionUser = sessionProvider.has('user') && JSON.parse(sessionProvider.get('user'))
-    return sessionUser || UserAPI.getDefaultUser()
+    const sessionUser = sessionProvider.has(tenantId) && JSON.parse(sessionProvider.get(tenantId)).user;
+    return sessionUser || UserAPI.getDefaultUser();
   },
 
   createUser: user => {
-    store.createDocument(tenantId, collectionId, user)
+    store.createDocument(tenantId, collectionId, user);
   }
 };
 

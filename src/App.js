@@ -5,6 +5,7 @@ import './App.css';
 import ChannelAPI from './model/ChannelAPI'
 import UserAPI from "./model/UserAPI";
 import sessionProvider from "./services/sessionProvider";
+import config from './config'
 
 /**
  *
@@ -21,8 +22,6 @@ import sessionProvider from "./services/sessionProvider";
  * - Before user picks a username - he should be able to see all the recently active public channels.
  * only when he is about to write we ask him for his username.
  *
- * 5) Show channels according to tenantId and userId - user will only see chats he is part of and the main channel
- * of the current tenant.
  *
  * 6) Only allow to open a single channel with each user.
  *
@@ -82,35 +81,54 @@ function addMessagesListeners(channels) {
     })
   })
 }
-
-async function loginUser(username) {
+async function listenToUserChanges() {
   UserAPI.onAuthStateChanged(async user => {
+    console.log('Current User: ', user)
     if (user) {
-      console.log('user logged!', user)
-      const newUser = _.assign({}, this.state.currentUser, {id: user.uid, username});
-      await UserAPI.createUser(newUser);
-      sessionProvider.set('user', JSON.stringify(newUser))
-      this.setState({
-        currentUser: newUser
-      })
-      ChannelAPI.onPrivateChannelsChanges(this.state.currentUser.id, channelsDataRetrieved.bind(this))
+      // if we are in first-load state:
+      if (this.authState === 'preInit') {
+        // we will check if user has an existing session, if not, we will signout.
+        UserAPI.validateSession(user);
+        return;
+      }
+      // if we are in a pending login state
+      if (this.authState === 'pendingLogin') {
+        this.authState = 'loggedIn';
+        // create or update the user in the collection.
+        const newUser = _.assign({}, this.state.currentUser, {id: user.uid, username: this.newUserDetails.username});
+        await UserAPI.createUser(newUser);
+        sessionProvider.set(config.defaultTenantId, JSON.stringify({user: newUser}));
+        this.setState({
+          currentUser: newUser
+        })
+        ChannelAPI.onPrivateChannelsChanges(this.state.currentUser.id, channelsDataRetrieved.bind(this))
+        return;
+      }
+
     } else {
       console.log('User logged out.')
     }
+  })
+}
 
-  });
-
+async function loginUser(username) {
+  this.newUserDetails = {
+    username
+  };
+  this.authState = 'pendingLogin';
   return UserAPI.login()
 }
 
 class App extends Component {
   constructor() {
     super();
+    this.authState = 'preInit';
     this.state = {
       channels: [],
       currentUser: UserAPI.getCurrentUser()
     };
 
+    listenToUserChanges.call(this);
     // listen to any changes in the channels list
     ChannelAPI.onPublicChannelsChanges(channelsDataRetrieved.bind(this))
     if (this.state.currentUser.id) {
