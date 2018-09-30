@@ -1,17 +1,11 @@
 import firebase from 'firebase/app'
 import 'firebase/firestore'
 import 'firebase/auth'
+import config from './../../config'
 import _ from "lodash";
 
-var config = {
-  apiKey: "AIzaSyA7Tzt7Whc6uY9YCBeiCrIgUm9r3qXFEMU",
-  //authDomain: "superchat-e7dbf.firebaseapp.com",
-  //databaseURL: "https://superchat-e7dbf.firebaseio.com",
-  projectId: "superchat-e7dbf",
-  //storageBucket: "superchat-e7dbf.appspot.com",
-  //messagingSenderId: "933253543537"
-};
-firebase.initializeApp(config);
+var firebaseConfig = config.storeAdapters.firebase;
+firebase.initializeApp(firebaseConfig);
 // Initialize Cloud Firestore through Firebase
 var db = firebase.firestore();
 

@@ -1,0 +1,9 @@
+{
+  "defaultTenantId": "<tenantKey>",
+  "storeAdapters": {
+    "firebase": {
+      "apiKey": "<api-key>",
+      "projectId": "<firebase-project>"
+    }
+  }
+}
