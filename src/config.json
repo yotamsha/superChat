@@ -1,9 +1,0 @@
-{
-  "defaultTenantId": "FANLZucFAQUK6H9caIKC",
-  "storeAdapters": {
-    "firebase": {
-      "apiKey": "AIzaSyA7Tzt7Whc6uY9YCBeiCrIgUm9r3qXFEMU",
-      "projectId": "superchat-e7dbf"
-    }
-  }
-}
