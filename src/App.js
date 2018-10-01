@@ -5,16 +5,15 @@ import './App.css';
 import ChannelAPI from './model/ChannelAPI'
 import UserAPI from "./model/UserAPI";
 import sessionProvider from "./services/sessionProvider";
-import config from './config'
+import configProvider from './services/configProvider'
 
+const config = configProvider.getConfig();
 /**
  *
  * TODOS
  *
  * 1) handle case where there is no space for displaying all conversations (facebook only show the last opened chats to
  * a certain number and then when you close certain chat it shows those that were previously opened instead)
- *
- * 2) show all members of a chat
  *
  * 4) Work on UI:
  * - a cool feature could be that when hovering on a username you can choose to start a private channel
@@ -25,7 +24,11 @@ import config from './config'
  *
  * 6) Only allow to open a single channel with each user.
  *
- * 7) Support injecting the code as a 3rd-party html tag. (iframe ? )
+ * 7) When a user is logged-in to a tenant and switches to another tenant he is not does not have a session but he does have
+ * a store session. I can decide that for now the authentication will be across tenants but
+ * eventually I want the tenants to be completely separate.
+ * - My issue is that when I log out from one tenant I lose the token of the last one.
+ * Maybe I can solve it by generating my own tokens and signIn with these custom tokens.
  */
 function updateItemInCollection(collection, updatedItem) {
   const updatedCollection = _.cloneDeep(collection)
@@ -38,7 +41,6 @@ function updateItemInCollection(collection, updatedItem) {
   }
   return updatedCollection;
 }
-
 /**
  * Add
  * @param collection
@@ -58,6 +60,7 @@ function getRelevantChannels(allChannels) {
   return _.concat(publicChannels, privateChannels);
 
 }
+
 function channelsDataRetrieved(updatedData) {
   const updatedChannels = mergeCollectionChanges(this.state.channels, updatedData);
   addMessagesListeners.call(this, updatedChannels);
@@ -81,6 +84,7 @@ function addMessagesListeners(channels) {
     })
   })
 }
+
 async function listenToUserChanges() {
   UserAPI.onAuthStateChanged(async user => {
     console.log('Current User: ', user)
@@ -88,7 +92,14 @@ async function listenToUserChanges() {
       // if we are in first-load state:
       if (this.authState === 'preInit') {
         // we will check if user has an existing session, if not, we will signout.
-        UserAPI.validateSession(user);
+        const isValidSession = UserAPI.validateSession(user.uid);
+        if (isValidSession) {
+          this.setState({
+            currentUser: _.assign({}, this.state.currentUser, {id: user.uid})
+          });
+          ChannelAPI.onPrivateChannelsChanges(user.uid, channelsDataRetrieved.bind(this))
+          this.authState = 'loggedIn'
+        }
         return;
       }
       // if we are in a pending login state
@@ -97,15 +108,15 @@ async function listenToUserChanges() {
         // create or update the user in the collection.
         const newUser = _.assign({}, this.state.currentUser, {id: user.uid, username: this.newUserDetails.username});
         await UserAPI.createUser(newUser);
-        sessionProvider.set(config.defaultTenantId, JSON.stringify({user: newUser}));
+        sessionProvider.set(config.appId, JSON.stringify({user: newUser}));
         this.setState({
           currentUser: newUser
         })
         ChannelAPI.onPrivateChannelsChanges(this.state.currentUser.id, channelsDataRetrieved.bind(this))
         return;
       }
-
     } else {
+      this.authState = 'loggedOut'
       console.log('User logged out.')
     }
   })
@@ -130,11 +141,9 @@ class App extends Component {
 
     listenToUserChanges.call(this);
     // listen to any changes in the channels list
-    ChannelAPI.onPublicChannelsChanges(channelsDataRetrieved.bind(this))
-    if (this.state.currentUser.id) {
-      ChannelAPI.onPrivateChannelsChanges(this.state.currentUser.id, channelsDataRetrieved.bind(this))
-    }
+    ChannelAPI.onPublicChannelsChanges(channelsDataRetrieved.bind(this));
   }
+  
   render() {
     return (
       <div className="App">

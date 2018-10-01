@@ -105,6 +105,10 @@ const dbActions = {
     return firebase.auth().signOut()
   },
 
+  signInWithCustomToken:  async token => {
+    return firebase.auth().signInWithCustomToken(token)
+  },
+
   onAuthStateChanged: (cb) => {
     firebase.auth().onAuthStateChanged(function (user) {
       if (user) {

@@ -1,9 +1,10 @@
 import _ from 'lodash';
 import {store} from '../store/index';
-import config from '../config'
+import configProvider from '../services/configProvider'
 
 const collectionName = 'channels';
-const tenantId = config.defaultTenantId;
+const tenantId = configProvider.getConfig().appId;
+
 function getUID() {
   return Math.floor(Math.random() * 100000000);
 }
@@ -54,7 +55,6 @@ export default {
         cb(populatedResults);
       });
     },
-
     /**
      *
      * @param parentChannel the parent channel to create a sub channel for. If not provided, will generate a root channel.
@@ -71,7 +71,6 @@ export default {
         };
         return store.createDocument(tenantId, collectionName, newChannel);
     },
-
     /**
      * remove channel and all it's messages.
      * @param channelId
@@ -79,7 +78,6 @@ export default {
     async removeChannel(channelId) {
 
     },
-
     /**
      * Add user to channel
      * @param channelId
@@ -88,7 +86,6 @@ export default {
     async addUserToChannel(channelId, userId) {
 
     },
-
     /**
      * Add message to channel
      * @param channelId
@@ -101,7 +98,6 @@ export default {
             user
         });
     },
-
     /**
      * Get all channels for a given userId
      * @param channelId
