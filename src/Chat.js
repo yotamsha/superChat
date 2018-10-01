@@ -3,6 +3,8 @@ import _ from 'lodash';
 import PropTypes from 'prop-types';
 import Channel from './Channel';
 import ChannelAPI from './model/ChannelAPI';
+import constants from './utils/constants'
+const {AUTH_STATES} = constants;
 
 const messageType = PropTypes.shape({
   id: PropTypes.string,
@@ -35,12 +37,13 @@ class Chat extends Component {
       id: PropTypes.string,
       username: PropTypes.string.isRequired
     }),
-    loginUser: PropTypes.func.isRequired
-  }
+    loginUser: PropTypes.func.isRequired,
+    authState: PropTypes.string.isRequired
+  };
 
   static defaultProps = {
     channels: []
-  }
+  };
 
   componentWillReceiveProps(newProps) {
     if (!this.state.activeTab) {
@@ -58,20 +61,18 @@ class Chat extends Component {
   async createMessage(channelId, message) {
     return ChannelAPI.addMessageToChannel(channelId, message, this.props.user);
   }
-  // TODO show some public channels and some private channels according to configuration -
-  // TODO public channels can have some UI which allows to navigate between them.
 
   render() {
     return (
       <div className="chat">
-        {!this.props.user.id && (<div className="user-tab">
+        {this.props.authState === AUTH_STATES.LOGGED_OUT && (<div className="user-tab">
           Hey, put your name here.
           <br/>
           <br/>
           <input defaultValue={this.props.user.username} onBlur={(event) => {this.chosenUsername = event.target.value}}></input>
           <button type="submit" onClick={() => this.props.loginUser(this.chosenUsername)}>Send</button>
         </div>)}
-        {this.props.user.id && _.map(this.props.channels, channel => (
+        {this.props.authState === AUTH_STATES.LOGGED_IN && _.map(this.props.channels, channel => (
           <Channel
             key={channel.id}
             id={channel.id}

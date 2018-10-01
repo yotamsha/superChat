@@ -6,6 +6,8 @@ import ChannelAPI from './model/ChannelAPI'
 import UserAPI from "./model/UserAPI";
 import sessionProvider from "./services/sessionProvider";
 import configProvider from './services/configProvider'
+import constants from './utils/constants'
+const {AUTH_STATES} = constants;
 
 const config = configProvider.getConfig();
 /**
@@ -90,33 +92,39 @@ async function listenToUserChanges() {
     console.log('Current User: ', user)
     if (user) {
       // if we are in first-load state:
-      if (this.authState === 'preInit') {
+      if (this.state.authState === AUTH_STATES.PRE_INIT) {
         // we will check if user has an existing session, if not, we will signout.
         const isValidSession = UserAPI.validateSession(user.uid);
         if (isValidSession) {
           this.setState({
+            authState: AUTH_STATES.LOGGED_IN,
             currentUser: _.assign({}, this.state.currentUser, {id: user.uid})
           });
           ChannelAPI.onPrivateChannelsChanges(user.uid, channelsDataRetrieved.bind(this))
-          this.authState = 'loggedIn'
+        } else {
+          this.setState({
+            authState: AUTH_STATES.LOGGED_OUT
+          });
         }
         return;
       }
       // if we are in a pending login state
-      if (this.authState === 'pendingLogin') {
-        this.authState = 'loggedIn';
+      if (this.state.authState === AUTH_STATES.PENDING_LOGIN) {
         // create or update the user in the collection.
         const newUser = _.assign({}, this.state.currentUser, {id: user.uid, username: this.newUserDetails.username});
         await UserAPI.createUser(newUser);
         sessionProvider.set(config.appId, JSON.stringify({user: newUser}));
         this.setState({
-          currentUser: newUser
+          currentUser: newUser,
+          authState: AUTH_STATES.LOGGED_IN
         })
         ChannelAPI.onPrivateChannelsChanges(this.state.currentUser.id, channelsDataRetrieved.bind(this))
         return;
       }
     } else {
-      this.authState = 'loggedOut'
+      this.setState({
+        authState: AUTH_STATES.LOGGED_OUT
+      });
       console.log('User logged out.')
     }
   })
@@ -126,15 +134,17 @@ async function loginUser(username) {
   this.newUserDetails = {
     username
   };
-  this.authState = 'pendingLogin';
+  this.setState({
+    authState: AUTH_STATES.PENDING_LOGIN
+  });
   return UserAPI.login()
 }
 
 class App extends Component {
   constructor() {
     super();
-    this.authState = 'preInit';
     this.state = {
+      authState: AUTH_STATES.PRE_INIT,
       channels: [],
       currentUser: UserAPI.getCurrentUser()
     };
@@ -147,7 +157,7 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <Chat user={this.state.currentUser} channels={this.state.channels} loginUser={loginUser.bind(this)}></Chat>
+        <Chat user={this.state.currentUser} channels={this.state.channels} authState={this.state.authState} loginUser={loginUser.bind(this)}></Chat>
       </div>
     );
   }
