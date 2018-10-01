@@ -2,8 +2,8 @@ import React, {Component} from 'react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import Channel from './Channel';
-import ChannelAPI from './model/ChannelAPI';
-import constants from './utils/constants'
+import ChannelAPI from './../model/ChannelAPI';
+import constants from './../utils/constants'
 const {AUTH_STATES} = constants;
 
 const messageType = PropTypes.shape({

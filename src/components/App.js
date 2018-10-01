@@ -2,11 +2,11 @@ import _ from 'lodash';
 import React, {Component} from 'react';
 import Chat from './Chat';
 import './App.css';
-import ChannelAPI from './model/ChannelAPI'
-import UserAPI from "./model/UserAPI";
-import sessionProvider from "./services/sessionProvider";
-import configProvider from './services/configProvider'
-import constants from './utils/constants'
+import ChannelAPI from './../model/ChannelAPI'
+import UserAPI from "./../model/UserAPI";
+import sessionProvider from "./../services/sessionProvider";
+import configProvider from './../services/configProvider'
+import constants from './../utils/constants'
 const {AUTH_STATES} = constants;
 
 const config = configProvider.getConfig();
