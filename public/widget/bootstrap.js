@@ -12,13 +12,5 @@ function prepareFrame(config) {
     ifrm.style.position = uiProps.position || 'fixed';
     document.getElementById('superChatContainer').appendChild(ifrm);
 }
+
 prepareFrame(config);
-//     <iframe src="http://localhost:5000/index.html?appId=FANLZucFAQUK6H9caIKC&position"
-// style="
-// border: 0px;
-// position: fixed;
-// bottom: 0;
-// height: 300px;
-// right: 0;
-// width: 600px;">
-// </iframe>

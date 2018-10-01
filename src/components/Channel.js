@@ -1,16 +1,9 @@
 import React, {Component} from 'react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
+import appPropTypes from './appPropTypes';
 
-const messageType = PropTypes.shape({
-  id: PropTypes.string.isRequired,
-  text: PropTypes.string
-})
-
-const userType = PropTypes.shape({
-  id: PropTypes.string.isRequired,
-  username: PropTypes.string.isRequired
-})
+const {messageType, userType} = appPropTypes;
 
 function getUsersStr(users) {
   return _.reduce(users, (str, user) => {
@@ -37,7 +30,7 @@ class Channel extends Component {
     createMessage: PropTypes.func.isRequired,
     onFocus: PropTypes.func,
     currentUser: userType
-  }
+  };
 
   scrollToBottom = () => {
     this.messagesEnd.scrollIntoView({behavior: "instant"});
