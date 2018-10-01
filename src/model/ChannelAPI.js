@@ -62,9 +62,8 @@ export default {
      * @returns {Promise<Channel>} id of the new created channel
      */
     async createChannel(usersToAdd) {
-        const channelTitle = `#${getUID()}`;
+        // const channelTitle = `#${getUID()}`;
         const newChannel = {
-            title: channelTitle,
             createdAt: new Date().getTime(),
             members: usersToAdd,
             isPublic: false

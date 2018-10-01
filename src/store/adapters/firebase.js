@@ -68,9 +68,9 @@ const dbActions = {
     let collectionRef = db.collection(tenantsCollection).doc(tenantId).collection(collectionName);
     if (newInstance.id) {
       collectionRef = collectionRef.doc(newInstance.id)
-      collectionRef.set(_.omit(newInstance, 'id'));
+      return collectionRef.set(_.omit(newInstance, 'id'));
     } else {
-      collectionRef.add(newInstance);
+      return collectionRef.add(newInstance);
     }
   },
 

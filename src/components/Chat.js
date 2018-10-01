@@ -46,7 +46,10 @@ class Chat extends Component {
 
     async openNewChannel(users) {
         // todo Only allow to open a single channel with a user.
-        return await ChannelAPI.createChannel(users)
+        const newChannel = await ChannelAPI.createChannel(users)
+        this.setState({
+            activeTab: newChannel.id
+        });
     }
 
     async createMessage(channelId, message) {

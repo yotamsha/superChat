@@ -24,8 +24,8 @@ class Channel extends Component {
     id: PropTypes.string.isRequired,
     messages: PropTypes.arrayOf(messageType),
     members: PropTypes.arrayOf(userType),
-    name: PropTypes.string.isRequired,
-    isActive: PropTypes.bool.isRequired,
+    name: PropTypes.string,
+    isActive: PropTypes.bool,
     openNewChannel: PropTypes.func.isRequired,
     createMessage: PropTypes.func.isRequired,
     onFocus: PropTypes.func,
@@ -56,7 +56,7 @@ class Channel extends Component {
     return (
       <div className={`channel-tab ${this.props.isActive ? 'active' : ''}`} onClick={this.onInputFocus.bind(this)}>
         <div className="tab-header">
-          <h3 className="channel-title">{`${getUsersStr(this.props.members)} (${this.props.name})`}</h3>
+          <h3 className="channel-title">{`${getUsersStr(this.props.members)} - ${this.props.name || ''}`}</h3>
           <div className="tab-users">
           </div>
         </div>

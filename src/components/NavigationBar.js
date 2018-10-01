@@ -5,6 +5,13 @@ import appPropTypes from './appPropTypes';
 
 const {channelType} = appPropTypes;
 
+function getUsersStr(users) {
+  return _.reduce(users, (str, user) => {
+    str += user.username + ", "
+    return str;
+  }, '').slice(0, -2)
+}
+
 class NavigationBar extends Component {
   static propTypes = {
     channels: PropTypes.arrayOf(channelType),
@@ -24,7 +31,7 @@ class NavigationBar extends Component {
                 <button key={channel.id}
                         className={`nav-btn channel ${channel.id === this.props.activeChannel ? 'active' : ''}`}
                         onClick={() => this.props.onChannelSelected(channel.id)}>
-                  <span className="hashtag">#</span>{channel.title}
+                  <span className="hashtag">#</span>{channel.title || getUsersStr(channel.members)}
                 </button>
             ))}
           </div>
