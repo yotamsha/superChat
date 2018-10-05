@@ -5,7 +5,7 @@ function prepareFrame(config) {
     const ifrm = document.createElement("iframe");
     ifrm.setAttribute("src", "https://superchat-e7dbf.firebaseapp.com/index.html?appId=" + config.appId);
     ifrm.style.border = "0px";
-    ifrm.style.height = "300px";
+    ifrm.style.height = "535px";
     ifrm.style.width = "100%";
     ifrm.style.right = "0";
     ifrm.style.bottom = "0px";
