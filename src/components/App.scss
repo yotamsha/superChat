@@ -23,7 +23,7 @@
       width: 100%;
       bottom: 0;
       height: 70px;
-      border: 1px solid #ccc;
+      border-top: 1px solid #ccc;
       padding: 10px;
       box-sizing: border-box;
       background-color: #fff;
@@ -44,8 +44,8 @@
         margin: 5px;
         background-color: #ffffff;
         color: $primary-color;
+        font-size: 15px;
         cursor: pointer;
-        font-weight: bold;
         &.active {
           background-color: $primary-color;
           color: #fff;
@@ -55,8 +55,9 @@
           background-color: $primary-color;
         }
         .hashtag {
-          color: $primary-light;
-          font-size: 15px;
+          color: #d7dbf9;
+          font-size: 14px;
+          vertical-align: middle;
         }
       }
     }
@@ -121,22 +122,36 @@
         box-shadow: inset 0px 2px 2px 0px rgba(204,204,204,0.90);
         .messages {
           list-style: none;
-          padding: 15px 0px 0px 10px;
           font-size: 14px;
           margin: 0;
-          height: 330px;
+          height: 300px;
           overflow-y: scroll;
+          padding: 15px;
           .msg-row {
-            line-height: 25px;
-            padding-left: 10px;
+            line-height: 20px;
+            min-height: 20px;
+            max-width: 300px;
+            display: table;
+            background-color: #e4e1e1;
+            border-radius: 10px;
+            padding: 10px;
+            margin-bottom: 10px;
+            clear: both;
+            &.me {
+              float:right;
+              background-color: $primary-light;
+            }
             a {
               cursor: pointer;
             }
             .username {
+              display: block;
+              font-weight: bold;
+
               &.me {
-                color: black;
+                color: #4e4b4b;
               }
-              font-style: oblique;
+
               color: $primary-color;
             }
           }

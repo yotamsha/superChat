@@ -70,7 +70,7 @@ class Chat extends Component {
                            onBlur={(event) => {this.chosenUsername = event.target.value}}></input>
                     <button type="submit" onClick={() => this.props.loginUser(this.chosenUsername)}>Send</button>
                 </div>)}
-                { channel && (
+                { this.props.user.id && channel && (
                     <Channel
                         key={channel.id}
                         id={channel.id}
@@ -79,6 +79,7 @@ class Chat extends Component {
                         createMessage={this.createMessage.bind(this)}
                         onFocus={switchActiveChannel.bind(this)}
                         name={channel.title}
+                        isPublic={channel.isPublic}
                         messages={channel.messages}
                         members={channel.members}>
                     </Channel>)}

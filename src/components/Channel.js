@@ -25,6 +25,7 @@ class Channel extends Component {
     messages: PropTypes.arrayOf(messageType),
     members: PropTypes.arrayOf(userType),
     name: PropTypes.string,
+    isPublic: PropTypes.bool,
     isActive: PropTypes.bool,
     openNewChannel: PropTypes.func.isRequired,
     createMessage: PropTypes.func.isRequired,
@@ -52,23 +53,36 @@ class Channel extends Component {
   onInputFocus() {
     this.props.onFocus(this.props.id)
   }
+
+  getTitle() {
+    if (this.props.isPublic) {
+      return this.props.name || '';
+    }
+    return getUsersStr(this.props.members)
+  }
+
   render() {
     return (
       <div className={`channel-tab ${this.props.isActive ? 'active' : ''}`} onClick={this.onInputFocus.bind(this)}>
         <div className="tab-header">
-          <h3 className="channel-title">{`${getUsersStr(this.props.members)} - ${this.props.name || ''}`}</h3>
+          <h3 className="channel-title">{`${this.getTitle()}`}</h3>
           <div className="tab-users">
           </div>
         </div>
 
         <div className="tab-messages">
           <ul className="messages">
-            {_.map(this.props.messages, msg =>
-              <li className="msg-row" key={msg.id}>
-                {msg.user.id !== this.props.currentUser.id ? (<a className="username other"
-                                                                 onClick={() => this.props.openNewChannel([this.props.currentUser.id, msg.user.id])}>{msg.user.username} > &nbsp;
-                </a>) : <span className="username me"> {msg.user.username} > &nbsp;</span>} {msg.text}
-              </li>)}
+            {_.map(this.props.messages, msg => {
+              const ownerMsg = msg.user.id === this.props.currentUser.id;
+
+              return <li className={'msg-row ' + (ownerMsg ? 'me' : '')} key={msg.id}>
+                {ownerMsg ? '' :
+                  (<a className="username other"
+                     onClick={() => this.props.openNewChannel([this.props.currentUser.id, msg.user.id])}>
+                    {msg.user.username}</a>)}
+                  {msg.text}
+              </li>
+            })}
             <li id={this.props.id} ref={(el) => {
               this.messagesEnd = el;
             }}></li>
