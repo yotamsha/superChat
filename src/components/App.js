@@ -98,7 +98,7 @@ async function listenToUserChanges() {
         if (isValidSession) {
           this.setState({
             authState: AUTH_STATES.LOGGED_IN,
-            currentUser: _.assign({}, this.state.currentUser, {id: user.uid})
+            currentUser: _.assign({}, UserAPI.getCurrentUser(), {id: user.uid})
           });
           ChannelAPI.onPrivateChannelsChanges(user.uid, channelsDataRetrieved.bind(this))
         } else {
@@ -146,7 +146,7 @@ class App extends Component {
     this.state = {
       authState: AUTH_STATES.PRE_INIT,
       channels: [],
-      currentUser: UserAPI.getCurrentUser()
+      currentUser: UserAPI.getDefaultUser()
     };
 
     listenToUserChanges.call(this);

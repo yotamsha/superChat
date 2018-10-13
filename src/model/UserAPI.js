@@ -37,8 +37,7 @@ const UserAPI = {
     },
 
     getCurrentUser: () => {
-        //const sessionUser = sessionProvider.has(tenantId) && JSON.parse(sessionProvider.get(tenantId)).user;
-        return UserAPI.getDefaultUser();
+        return getSessionUser();
     },
 
     createUser: user => {

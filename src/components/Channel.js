@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import appPropTypes from './appPropTypes';
+import FontAwesome from 'react-fontawesome';
 
 const {messageType, userType} = appPropTypes;
 
@@ -76,14 +77,16 @@ class Channel extends Component {
               const ownerMsg = msg.user.id === this.props.currentUser.id;
 
               return <li className={'msg-row ' + (ownerMsg ? 'me' : '')} key={msg.id}>
-                {ownerMsg ? '' :
-                  (<a className="username other"
-                     onClick={() => this.props.openNewChannel([this.props.currentUser.id, msg.user.id])}>
-                    {msg.user.username}</a>)}
+                <div className="msg-content">
+                  {ownerMsg ? '' :
+                    (<a className="username other"
+                        onClick={() => this.props.openNewChannel([this.props.currentUser.id, msg.user.id])}>
+                      {msg.user.username}</a>)}
                   {msg.text}
+                </div>
               </li>
             })}
-            <li id={this.props.id} ref={(el) => {
+            <li ref={(el) => {
               this.messagesEnd = el;
             }}></li>
           </ul>
@@ -96,7 +99,9 @@ class Channel extends Component {
                      }
                    }}
                    onChange={(event) => this.setState({newMessage: event.target.value})}></input>
-            <button type="submit" onClick={this.submitMessage.bind(this)}>Send</button>
+            <button type="submit" onClick={this.submitMessage.bind(this)}>
+              <FontAwesome name='send' />
+            </button>
           </div>
         </div>
       </div>
