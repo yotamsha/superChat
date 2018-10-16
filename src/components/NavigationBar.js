@@ -3,10 +3,11 @@ import _ from 'lodash';
 import PropTypes from 'prop-types';
 import appPropTypes from './appPropTypes';
 
-const {channelType} = appPropTypes;
+const {channelType, userType} = appPropTypes;
 
-function getUsersStr(users) {
-  return _.reduce(users, (str, user) => {
+function getUsersStr(users, currentUser) {
+  const otherUsers = _.filter(users, user => user.id !== currentUser.id);
+  return _.reduce(otherUsers, (str, user) => {
     str += user.username + ", "
     return str;
   }, '').slice(0, -2)
@@ -14,24 +15,27 @@ function getUsersStr(users) {
 
 class NavigationBar extends Component {
   static propTypes = {
+    currentUser: userType,
     channels: PropTypes.arrayOf(channelType),
     onChannelSelected: PropTypes.func.isRequired,
-    activeChannel: PropTypes.string,
+    activeTab: PropTypes.string,
   }
 
   render() {
     return (
       <div className="nav-bar">
         <div className="pinned-tabs-container">
-          <button className="nav-btn channels">Channels</button>
-          <button className="nav-btn members">Members</button>
+          <button onClick={() => this.props.onChannelSelected('login')}
+            className={`nav-btn channels ${this.props.activeTab === 'login' ? 'active' : ''}`}>Profile</button>
+          {/*<button className="nav-btn members">Members</button>*/}
         </div>
         <div className="channel-tabs">
           {_.map(this.props.channels, channel => (
             <button key={channel.id}
-                    className={`nav-btn channel ${channel.id === this.props.activeChannel ? 'active' : ''}`}
+                    className={`nav-btn channel ${channel.id === this.props.activeTab ? 'active' : ''}`}
                     onClick={() => this.props.onChannelSelected(channel.id)}>
-              <span className="hashtag">{channel.isPublic ? '# ' : ''}</span>{channel.title || getUsersStr(channel.members)}
+              <span className="hashtag">{channel.isPublic ? '# ' : ''}</span>
+              {channel.title || getUsersStr(channel.members, this.props.currentUser)}
             </button>
           ))}
         </div>

@@ -15,6 +15,19 @@
     button {
       font-family: 'Roboto', sans-serif, Arial;
     }
+
+    ::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+      color: #b1b1b1;
+    }
+    ::-moz-placeholder { /* Firefox 19+ */
+      color: #b1b1b1;
+    }
+    :-ms-input-placeholder { /* IE 10+ */
+      color: #b1b1b1;
+    }
+    :-moz-placeholder { /* Firefox 18- */
+      color: #b1b1b1;
+    }
   }
 
   .chat {
@@ -41,7 +54,7 @@
         border-radius: 3px;
         border: 1px solid #3F51B5;
         padding: 0px 10px 0px 10px;
-        margin: 5px;
+        margin: 5px 5px 10px 5px;
         background-color: #ffffff;
         color: $primary-color;
         font-size: 15px;
@@ -62,17 +75,7 @@
       }
     }
 
-    .user-tab {
-      height: 120px;
-      width: 275px;
-      position: fixed;
-      bottom: 70px;
-      padding: 25px;
-      background-color: #3f51b5;
-      color: #fff;
-    }
-
-    .channel-tab {
+    .app-tab {
       z-index: 2;
       background-color: #ffffff;
       height: 450px;
@@ -87,116 +90,163 @@
       overflow: hidden;
       outline: 0;
 
-      &.active {
-        .tab-header {
-          background-color: $primary-color;
-        }
-      }
-
       .tab-header {
         background-color: $primary-color;
         color: #fff;
         padding: 15px;
         height: 20px;
-        .channel-title {
+        .tab-title {
           font-size: 16px;
           text-overflow: ellipsis;
           overflow: hidden;
           white-space: nowrap;
         }
-        .tab-users {
-          padding-top: 5px;
-          font-size: 12px;
-          height: 15px;
-          overflow: hidden;
-          white-space: nowrap;
-          text-overflow: ellipsis;
-        }
       }
 
-      .tab-messages {
-        height: 400px;
-        position: relative;
-        background-color: #fdfdfd;
-        -webkit-box-shadow: inset 0px 2px 2px 0px rgba(204, 204, 204, 0.90);
-        -moz-box-shadow: inset 0px 2px 2px 0px rgba(204, 204, 204, 0.90);
-        box-shadow: inset 0px 2px 2px 0px rgba(204, 204, 204, 0.90);
-        .messages {
-          list-style: none;
-          font-size: 14px;
-          margin: 0;
-          height: 305px;
-          overflow-y: scroll;
-          padding: 15px;
-          .msg-row {
-            display: flex;
-            .msg-content {
-              line-height: 20px;
-              min-height: 20px;
-              max-width: 300px;
-              border-radius: 10px;
-              padding: 10px;
-              margin-bottom: 10px;
-              background-color: #e4e1e1;
-            }
+      &.channel-tab {
+        &.active {
+          .tab-header {
+            background-color: $primary-color;
+          }
+        }
 
-            &.me {
-              justify-content: flex-end;
+        .tab-header {
+          .tab-users {
+            padding-top: 5px;
+            font-size: 12px;
+            height: 15px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+          }
+        }
+
+        .tab-messages {
+          height: 400px;
+          position: relative;
+          background-color: #fdfdfd;
+          -webkit-box-shadow: inset 0px 2px 2px 0px rgba(204, 204, 204, 0.90);
+          -moz-box-shadow: inset 0px 2px 2px 0px rgba(204, 204, 204, 0.90);
+          box-shadow: inset 0px 2px 2px 0px rgba(204, 204, 204, 0.90);
+          .messages {
+            list-style: none;
+            font-size: 14px;
+            margin: 0;
+            height: 305px;
+            overflow-y: scroll;
+            padding: 15px;
+            .msg-row {
+              display: flex;
               .msg-content {
-                background-color: $primary-light;
+                line-height: 20px;
+                min-height: 20px;
+                max-width: 300px;
+                border-radius: 10px;
+                padding: 10px;
+                margin-bottom: 10px;
+                background-color: #e4e1e1;
               }
-            }
-            a {
-              cursor: pointer;
-            }
-            .username {
-              display: block;
-              font-weight: bold;
 
               &.me {
-                color: #4e4b4b;
+                justify-content: flex-end;
+                .msg-content {
+                  background-color: $primary-light;
+                }
               }
+              a {
+                cursor: pointer;
+              }
+              .username {
+                display: block;
+                font-weight: bold;
 
-              color: $primary-color;
+                &.me {
+                  color: #4e4b4b;
+                }
+
+                color: $primary-color;
+              }
             }
           }
-        }
-        .message-input {
-          position: absolute;
-          bottom: 0;
-          width: 100%;
-          padding-bottom: 10px;
-          padding-top: 10px;
-          background-color: #dfe5eb;
-          input {
-            height: 43px;
-            width: 67%;
-            border: 0;
-            background-color: #ffffff;
-            border-radius: 30px;
-            outline: 0;
-            padding-left: 25px;
-            padding-right: 25px;
-            margin-left: 10px;
-            margin-right: 10px;
-            font-size: 14px;
-          }
-          button {
-            background-color: transparent;
-            border: 0px;
-            outline: 0;
+          .message-input {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            padding-bottom: 10px;
+            padding-top: 10px;
+            background-color: #dfe5eb;
+            input {
+              height: 43px;
+              width: 330px;
+              border: 0;
+              background-color: #ffffff;
+              border-radius: 30px;
+              outline: 0;
+              padding-left: 25px;
+              padding-right: 25px;
+              margin-left: 10px;
+              margin-right: 10px;
+              font-size: 14px;
+              box-sizing: border-box;
+            }
+            button {
+              background-color: transparent;
+              border: 0px;
+              outline: 0;
 
-            span {
-              color: #3d4ebc;
-              font-size: 24px;
-              cursor: pointer;
-              line-height: 7px;
-              vertical-align: top;
+              span {
+                color: #3d4ebc;
+                font-size: 24px;
+                cursor: pointer;
+                vertical-align: middle;
+              }
             }
           }
         }
       }
+
+      &.user-tab {
+        background-color: #f3f4ff;
+        .user-img {
+          height: 150px;
+          width: 150px;
+          display: block;
+          border-radius: 50%;
+          margin: 60px auto;
+          cursor: pointer;
+        }
+
+        #username {
+          height: 50px;
+          width: 250px;
+          border-radius: 30px;
+          border: 1px solid #ecebeb;
+          padding: 5px 15px;
+          font-size: 16px;
+          box-sizing: border-box;
+          margin-left: 45px;
+          outline: 0;
+        }
+        button {
+          background-color: #3d4ebc;
+          border: 0px;
+          outline: 0;
+          height: 50px;
+          width: 50px;
+          border-radius: 50%;
+          margin-left: 15px;
+          cursor: pointer;
+
+          span {
+            color: #fff;
+            font-size: 19px;
+          }
+        }
+
+      }
     }
+
+
   }
 
 }

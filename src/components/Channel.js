@@ -29,7 +29,8 @@ class Channel extends Component {
     isPublic: PropTypes.bool,
     isActive: PropTypes.bool,
     openNewChannel: PropTypes.func.isRequired,
-    createMessage: PropTypes.func.isRequired,
+    onSubmitMessage: PropTypes.func.isRequired,
+    onInputFocus: PropTypes.func.isRequired,
     onFocus: PropTypes.func,
     currentUser: userType
   };
@@ -38,8 +39,8 @@ class Channel extends Component {
     this.messagesEnd.scrollIntoView({behavior: "instant"});
   }
 
-  submitMessage() {
-    this.props.createMessage(this.props.id, this.state.newMessage);
+  async submitMessage(msg, channelId) {
+    await this.props.onSubmitMessage(msg, channelId);
     this.setState({newMessage: ''})
   }
 
@@ -52,7 +53,7 @@ class Channel extends Component {
   }
 
   onInputFocus() {
-    this.props.onFocus(this.props.id)
+    this.props.onInputFocus();
   }
 
   getTitle() {
@@ -64,9 +65,9 @@ class Channel extends Component {
 
   render() {
     return (
-      <div className={`channel-tab ${this.props.isActive ? 'active' : ''}`} onClick={this.onInputFocus.bind(this)}>
+      <div className={`app-tab channel-tab ${this.props.isActive ? 'active' : ''}`} onClick={this.onInputFocus.bind(this)}>
         <div className="tab-header">
-          <h3 className="channel-title">{`${this.getTitle()}`}</h3>
+          <h3 className="tab-title">{`${this.getTitle()}`}</h3>
           <div className="tab-users">
           </div>
         </div>
@@ -92,14 +93,14 @@ class Channel extends Component {
           </ul>
 
           <div className="message-input">
-            <input value={this.state.newMessage} placeholder="" onFocus={this.onInputFocus.bind(this)}
+            <input value={this.state.newMessage} placeholder="Type your message" onFocus={this.onInputFocus.bind(this)}
                    onKeyPress={(e) => {
                      if (e.key === 'Enter') {
-                       this.submitMessage()
+                       this.submitMessage(this.state.newMessage, this.props.id)
                      }
                    }}
                    onChange={(event) => this.setState({newMessage: event.target.value})}></input>
-            <button type="submit" onClick={this.submitMessage.bind(this)}>
+            <button type="submit" onClick={() => this.submitMessage(this.state.newMessage, this.props.id)}>
               <FontAwesome name='send' />
             </button>
           </div>

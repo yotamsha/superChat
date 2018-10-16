@@ -137,7 +137,7 @@ async function loginUser(username) {
   this.setState({
     authState: AUTH_STATES.PENDING_LOGIN
   });
-  return UserAPI.login()
+  return await UserAPI.login()
 }
 
 class App extends Component {
