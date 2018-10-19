@@ -27,6 +27,7 @@ class Chat extends Component {
     channels: PropTypes.arrayOf(channelType),
     user: userType,
     loginUser: PropTypes.func.isRequired,
+    updateUser: PropTypes.func.isRequired,
     authState: PropTypes.string.isRequired
   };
 
@@ -85,7 +86,7 @@ class Chat extends Component {
           onChannelSelected={switchActiveChannel.bind(this)}>
         </NavigationBar>
         {this.state.activeTab === 'login' &&
-        <UserProfile user={this.props.user} loginUser={this.props.loginUser}></UserProfile>}
+        <UserProfile user={this.props.user} updateUser={this.props.updateUser} loginUser={this.props.loginUser}></UserProfile>}
 
         {channel && (
           <Channel

@@ -75,6 +75,12 @@ const dbActions = {
     }
   },
 
+  updateDocument: async (tenantId, collectionName, instance) => {
+    let docRef = db.collection(tenantsCollection).doc(tenantId).collection(collectionName).doc(instance.id);
+    await docRef.set(instance, {merge: true});
+    return instance;
+  },
+
   createRelated: (tenantId, collectionName, docId, relatedCollection, newInstance) => {
     const relatedRef = db.collection(tenantsCollection).doc(tenantId).collection(collectionName).doc(docId).collection(relatedCollection);
     relatedRef.add(newInstance);

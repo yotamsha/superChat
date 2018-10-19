@@ -59,6 +59,7 @@
         color: $primary-color;
         font-size: 15px;
         cursor: pointer;
+        outline: 0;
         &.active {
           background-color: $primary-color;
           color: #fff;

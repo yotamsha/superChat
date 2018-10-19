@@ -111,7 +111,7 @@ async function listenToUserChanges() {
       // if we are in a pending login state
       if (this.state.authState === AUTH_STATES.PENDING_LOGIN) {
         // create or update the user in the collection.
-        const newUser = _.assign({}, this.state.currentUser, {id: user.uid, username: this.newUserDetails.username});
+        const newUser = _.assign({}, this.state.currentUser, {id: user.uid}, this.newUserDetails);
         await UserAPI.createUser(newUser);
         sessionProvider.set(config.appId, JSON.stringify({user: newUser}));
         this.setState({
@@ -130,14 +130,21 @@ async function listenToUserChanges() {
   })
 }
 
-async function loginUser(username) {
-  this.newUserDetails = {
-    username
-  };
+async function loginUser(userDetails) {
+  this.newUserDetails = userDetails;
+
   this.setState({
     authState: AUTH_STATES.PENDING_LOGIN
   });
   return await UserAPI.login()
+}
+
+async function updateUser(user) {
+  const updatedUser = await UserAPI.updateUser(user)
+  sessionProvider.set(config.appId, JSON.stringify({user: updatedUser}));
+  this.setState({
+    currentUser: updatedUser
+  });
 }
 
 class App extends Component {
@@ -157,7 +164,12 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <Chat user={this.state.currentUser} channels={this.state.channels} authState={this.state.authState} loginUser={loginUser.bind(this)}></Chat>
+        <Chat user={this.state.currentUser}
+              channels={this.state.channels}
+              authState={this.state.authState}
+              loginUser={loginUser.bind(this)}
+              updateUser={updateUser.bind(this)}>
+        </Chat>
       </div>
     );
   }
