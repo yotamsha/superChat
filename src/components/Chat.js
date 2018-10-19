@@ -5,10 +5,8 @@ import Channel from './Channel';
 import NavigationBar from './NavigationBar';
 import UserProfile from './UserProfile';
 import ChannelAPI from './../model/ChannelAPI';
-import constants from './../utils/constants';
 import appPropTypes from './appPropTypes';
 
-const {AUTH_STATES} = constants;
 const {channelType, userType} = appPropTypes;
 
 function switchActiveChannel(channelId) {

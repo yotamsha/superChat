@@ -5,14 +5,7 @@ import configProvider from '../services/configProvider'
 const collectionName = 'channels';
 const tenantId = configProvider.getConfig().appId;
 
-function getUID() {
-  return Math.floor(Math.random() * 100000000);
-}
-
 async function populatedListWithRelatedCollection(list, fieldToPopulate, populateFromCollection,) {
-  //const populatedResults = await
-  //Promise.all()
-
   return (await Promise.all(list.map(async item => {
     const members = await store.populateFromCollection(tenantId, populateFromCollection, item[fieldToPopulate]);
     return _.assign({}, item, {members})
