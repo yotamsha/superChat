@@ -3,7 +3,9 @@ import _ from 'lodash';
 import PropTypes from 'prop-types';
 import appPropTypes from './appPropTypes';
 import FontAwesome from 'react-fontawesome';
+import emojis from 'emojis-list';
 
+emojis.sort();
 const {messageType, userType} = appPropTypes;
 
 function getUsersStr(users) {
@@ -16,8 +18,9 @@ function getUsersStr(users) {
 class Channel extends Component {
   constructor() {
     super();
+    this.currentMessage = '';
     this.state = {
-      newMessage: ''
+      emojisListOpen: false
     };
   }
 
@@ -41,7 +44,8 @@ class Channel extends Component {
 
   async submitMessage(msg, channelId) {
     await this.props.onSubmitMessage(msg, channelId);
-    this.setState({newMessage: ''})
+    this.currentMessage = ''
+    this.messageInputRef.value = ''
   }
 
   componentDidMount() {
@@ -61,6 +65,16 @@ class Channel extends Component {
       return this.props.name || '';
     }
     return getUsersStr(this.props.members)
+  }
+
+  openCloseEmojisList() {
+    this.setState({
+      emojisListOpen: !this.state.emojisListOpen
+    })
+  }
+
+  addChar(char) {
+    this.messageInputRef.value = this.messageInputRef.value += char;
   }
 
   render() {
@@ -91,19 +105,30 @@ class Channel extends Component {
               this.messagesEnd = el;
             }}></li>
           </ul>
-
+          <div tabIndex="0" className={'emojis-list ' + (this.state.emojisListOpen ? 'open' : '')} onBlur={this.openCloseEmojisList.bind(this)}>
+            <div className="list-container">
+              <ul>
+                {_.map(emojis, emoji => {
+                  return <li key={emoji} className="emoji-li" onClick={() => this.addChar(emoji)}>{emoji}</li>
+                })}
+              </ul>
+            </div>
+          </div>
           <div className="message-input">
-            <input value={this.state.newMessage} placeholder="Type your message" onFocus={this.onInputFocus.bind(this)}
+            <input defaultValue={this.currentMessage} placeholder="Type your message" onFocus={this.onInputFocus.bind(this)}
+                   ref={(ref) => this.messageInputRef= ref}
                    onKeyPress={(e) => {
                      if (e.key === 'Enter') {
-                       this.submitMessage(this.state.newMessage, this.props.id)
+                       this.submitMessage(this.currentMessage, this.props.id)
                      }
                    }}
-                   onChange={(event) => this.setState({newMessage: event.target.value})}></input>
-            <button type="submit" onClick={() => this.submitMessage(this.state.newMessage, this.props.id)}>
+                   onChange={(event) => this.currentMessage = event.target.value}></input>
+            <button className="emojis-btn" onClick={this.openCloseEmojisList.bind(this)}><FontAwesome name='smile-o'/></button>
+            <button type="submit" onClick={() => this.submitMessage(this.currentMessage, this.props.id)}>
               <FontAwesome name='send' />
             </button>
           </div>
+
         </div>
       </div>
     );
