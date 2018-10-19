@@ -214,14 +214,20 @@
             outline: 0;
             height: 0px;
             opacity: 0;
-            overflow-y: scroll;
+            overflow: hidden;
             -ms-flex: 0 0;
             background-color: #efefef;
             flex: 0 0;
             transition: all .25s ease;
 
             .list-container {
-              padding: 10px;
+              .emoji-mart {
+                width: 100% !important;
+                .emoji-mart-search {
+                  display: none;
+                }
+              }
+              //padding: 10px;
               .emoji-li {
                 float: left;
                 font-size: 24px;
@@ -231,11 +237,11 @@
               }
             }
             &.open {
-              height: 130px;
+              height: 180px;
               opacity: 1;
-              border-top: 7px solid #f7e3d5;
+              //border-top: 7px solid #f7e3d5;
               position: relative;
-              padding: 10px;
+              //padding: 10px;
             }
           }
         }

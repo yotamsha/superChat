@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "emojis-list": "^2.1.0",
+    "emoji-mart": "^2.8.1",
     "firebase": "^5.5.0",
     "font-awesome": "^4.7.0",
     "lodash": "^4.17.10",

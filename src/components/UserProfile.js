@@ -3,7 +3,7 @@ import _ from 'lodash';
 import PropTypes from 'prop-types';
 import appPropTypes from './appPropTypes';
 import FontAwesome from 'react-fontawesome';
-import userImagePlaceholder from './../images/251981-P43JLR-579.jpg'
+import userImagePlaceholder from './../images/profile-back.jpg'
 const {userType} = appPropTypes;
 
 class UserProfile extends Component {

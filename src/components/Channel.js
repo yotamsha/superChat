@@ -3,7 +3,8 @@ import _ from 'lodash';
 import PropTypes from 'prop-types';
 import appPropTypes from './appPropTypes';
 import FontAwesome from 'react-fontawesome';
-import emojis from 'emojis-list';
+import 'emoji-mart/css/emoji-mart.css'
+import { Picker } from 'emoji-mart'
 
 emojis.sort();
 const {messageType, userType} = appPropTypes;
@@ -75,6 +76,7 @@ class Channel extends Component {
 
   addChar(char) {
     this.messageInputRef.value = this.messageInputRef.value += char;
+    this.currentMessage = this.messageInputRef.value;
   }
 
   render() {
@@ -107,11 +109,13 @@ class Channel extends Component {
           </ul>
           <div tabIndex="0" className={'emojis-list ' + (this.state.emojisListOpen ? 'open' : '')} onBlur={this.openCloseEmojisList.bind(this)}>
             <div className="list-container">
-              <ul>
-                {_.map(emojis, emoji => {
-                  return <li key={emoji} className="emoji-li" onClick={() => this.addChar(emoji)}>{emoji}</li>
-                })}
-              </ul>
+              {/*<ul>*/}
+                {/*{_.map(emojis, emoji => {*/}
+                  {/*return <li key={emoji} className="emoji-li" onClick={() => this.addChar(emoji)}>{emoji}</li>*/}
+                {/*})}*/}
+              {/*</ul>*/}
+
+              <Picker showPreview="false" onSelect={emoji => this.addChar(emoji.native)}/>
             </div>
           </div>
           <div className="message-input">
