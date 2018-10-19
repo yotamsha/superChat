@@ -43,9 +43,17 @@ class Channel extends Component {
   }
 
   async submitMessage(msg, channelId) {
+    if (!this.props.currentUser.id) {
+      this.props.onInputFocus();
+      return;
+    }
+
     await this.props.onSubmitMessage(msg, channelId);
     this.currentMessage = ''
     this.messageInputRef.value = ''
+    this.setState({
+      emojisListOpen: false
+    })
   }
 
   componentDidMount() {
@@ -54,10 +62,6 @@ class Channel extends Component {
 
   componentDidUpdate() {
     this.scrollToBottom();
-  }
-
-  onInputFocus() {
-    this.props.onInputFocus();
   }
 
   getTitle() {
@@ -80,7 +84,7 @@ class Channel extends Component {
 
   render() {
     return (
-      <div className={`app-tab channel-tab ${this.props.isActive ? 'active' : ''}`} onClick={this.onInputFocus.bind(this)}>
+      <div className={`app-tab channel-tab ${this.props.isActive ? 'active' : ''}`}>
         <div className="tab-header">
           <h3 className="tab-title">{`${this.getTitle()}`}</h3>
           <div className="tab-users">
@@ -106,19 +110,13 @@ class Channel extends Component {
               this.messagesEnd = el;
             }}></li>
           </ul>
-          <div tabIndex="0" className={'emojis-list ' + (this.state.emojisListOpen ? 'open' : '')} onBlur={this.openCloseEmojisList.bind(this)}>
+          <div className={'emojis-list ' + (this.state.emojisListOpen ? 'open' : '')}>
             <div className="list-container">
-              {/*<ul>*/}
-                {/*{_.map(emojis, emoji => {*/}
-                  {/*return <li key={emoji} className="emoji-li" onClick={() => this.addChar(emoji)}>{emoji}</li>*/}
-                {/*})}*/}
-              {/*</ul>*/}
-
-              <Picker showPreview="false" onSelect={emoji => this.addChar(emoji.native)}/>
+              <Picker showPreview="false" onSelect={emoji => this.addChar(emoji.native)} color="#3F51B5"/>
             </div>
           </div>
           <div className="message-input">
-            <input defaultValue={this.currentMessage} placeholder="Type your message" onFocus={this.onInputFocus.bind(this)}
+            <input defaultValue={this.currentMessage} placeholder="Type your message"
                    ref={(ref) => this.messageInputRef= ref}
                    onKeyPress={(e) => {
                      if (e.key === 'Enter') {

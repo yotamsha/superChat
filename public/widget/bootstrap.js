@@ -6,8 +6,6 @@ function fetch_text (url) {
 
   function loadApp () {
     fetch_text("https://superchat-e7dbf.firebaseapp.com/index.html").then((html) => {
-      const regex = /\/static\//gi;
-      html = html.replace(regex, 'https://superchat-e7dbf.firebaseapp.com/static/');
       const el = document.createElement('div');
       el.innerHTML = html;
       const scripts = el.getElementsByTagName('script');
@@ -25,17 +23,5 @@ function fetch_text (url) {
       console.warn(error);
     });
   }
-// function prepareFrame(config) {
-//     const uiProps = config.uiProps;
-//     const ifrm = document.createElement("iframe");
-//     ifrm.setAttribute("src", "https://superchat-e7dbf.firebaseapp.com/index.html?appId=" + config.appId);
-//     ifrm.style.border = "0px";
-//     ifrm.style.height = "535px";
-//     ifrm.style.width = "100%";
-//     ifrm.style.right = "0";
-//     ifrm.style.bottom = "0px";
-//     ifrm.style.position = uiProps.position || 'fixed';
-//     document.getElementById('superChatContainer').appendChild(ifrm);
-// }
 
 loadApp();

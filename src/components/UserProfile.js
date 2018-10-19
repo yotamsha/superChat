@@ -3,7 +3,7 @@ import _ from 'lodash';
 import PropTypes from 'prop-types';
 import appPropTypes from './appPropTypes';
 import FontAwesome from 'react-fontawesome';
-import userImagePlaceholder from './../images/profile-back.jpg'
+
 const {userType} = appPropTypes;
 
 class UserProfile extends Component {
@@ -27,7 +27,7 @@ class UserProfile extends Component {
         <div className="tab-header">
           <h3 className="tab-title">User Details</h3>
         </div>
-        <img className="user-img" src={userImagePlaceholder}></img>
+        <img className="user-img" src={process.env.PUBLIC_URL + '/images/profile-back.jpg'}></img>
         <input id="username" placeholder="Username" defaultValue={this.props.user.username}
                onBlur={(event) => {
                  this.chosenUsername = event.target.value

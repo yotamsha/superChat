@@ -2,6 +2,7 @@
   "name": "my-app",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://superchat-e7dbf.firebaseapp.com",
   "dependencies": {
     "emoji-mart": "^2.8.1",
     "firebase": "^5.5.0",
@@ -15,6 +16,7 @@
     "typeface-roboto": "0.0.54"
   },
   "scripts": {
+    "deploy": "PUBLIC_URL=https://superchat-e7dbf.firebaseapp.com yarn build && firebase deploy",
     "build-css": "node-sass-chokidar src/ -o src/",
     "watch-css": "npm run build-css && node-sass-chokidar src/ -o src/ --watch --recursive",
     "start": "react-scripts start",

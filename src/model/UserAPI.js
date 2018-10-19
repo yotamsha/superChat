@@ -31,9 +31,8 @@ const UserAPI = {
   },
 
   getDefaultUser: () => {
-    const randomId = Math.floor(Math.random() * (10000));
     return {
-      username: `Guest${randomId}`
+      username: ''
     };
   },
 
