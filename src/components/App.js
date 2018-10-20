@@ -63,6 +63,11 @@ function getRelevantChannels(allChannels) {
 
 }
 
+function getMainChannel(channels) {
+  return channels.length && channels[0].id;
+
+}
+
 function channelsDataRetrieved(updatedData) {
   const updatedChannels = mergeCollectionChanges(this.state.channels, updatedData);
   addMessagesListeners.call(this, updatedChannels);
@@ -71,7 +76,7 @@ function channelsDataRetrieved(updatedData) {
     channels: getRelevantChannels(updatedChannels)
   };
   if (!this.state.activeTab) {
-    newState.activeTab = newState.channels.length && newState.channels[0].id
+    newState.activeTab = getMainChannel(newState.channels)
   }
   this.setState(newState);
 }
@@ -150,8 +155,10 @@ async function loginUser(userDetails) {
   this.newUserDetails = userDetails;
 
   this.setState({
+    activeTab: getMainChannel(this.state.channels),
     authState: AUTH_STATES.PENDING_LOGIN
   });
+
   return await UserAPI.login()
 }
 
@@ -159,6 +166,7 @@ async function updateUser(user) {
   const updatedUser = await UserAPI.updateUser(user)
   sessionProvider.set(config.appId, JSON.stringify({user: updatedUser}));
   this.setState({
+    activeTab: getMainChannel(this.state.channels),
     currentUser: updatedUser
   });
 }
@@ -177,16 +185,6 @@ class App extends Component {
     listenToUserChanges.call(this);
     // listen to any changes in the channels list
     ChannelAPI.onPublicChannelsChanges(channelsDataRetrieved.bind(this));
-  }
-
-  componentWillReceiveProps(newProps) {
-    // if (this.state.activeTab && this.state.unreadChannels[this.state.activeTab]) {
-    //   this.props.markChannelAsRead(this.state.activeTab);
-    // }
-
-    // if (!this.state.activeTab || this.state.activeTab === 'login') {
-    //   switchActiveChannel.call(this, newProps.channels.length && newProps.channels[0].id)
-    // }
   }
   
   render() {
