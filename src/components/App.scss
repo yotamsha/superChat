@@ -104,6 +104,11 @@
       overflow: hidden;
       outline: 0;
 
+      @include media-max($layout-breakpoint-sm) {
+        left: 0;
+        width: 100%;
+      }
+
       .tab-header {
         background-color: $primary-color;
         color: #fff;
@@ -228,6 +233,11 @@
               margin-right: 10px;
               font-size: 14px;
               box-sizing: border-box;
+
+              @include media-max($layout-breakpoint-sm) {
+                left: 0;
+                width: 70%;
+              }
             }
             button {
               background-color: transparent;
@@ -330,5 +340,6 @@
       }
     }
   }
+
 
 }

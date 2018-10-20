@@ -57,8 +57,10 @@ function mergeCollectionChanges(collection, updatedCollection) {
 }
 
 function getRelevantChannels(allChannels) {
-  const publicChannels = _(allChannels).filter('isPublic').takeRight(1).value();
-  const privateChannels = _(allChannels).reject('isPublic').sortBy('createdAt').takeRight(3).value();
+  const MAX_PRIVATE_CHATS = 10;
+  const MAX_PUBLIC_CHATS = 1;
+  const publicChannels = _(allChannels).filter('isPublic').takeRight(MAX_PUBLIC_CHATS).value();
+  const privateChannels = _(allChannels).reject('isPublic').sortBy('createdAt').reverse().takeRight(MAX_PRIVATE_CHATS).value();
   return _.concat(publicChannels, privateChannels);
 
 }

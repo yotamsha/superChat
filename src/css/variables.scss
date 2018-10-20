@@ -4,3 +4,26 @@ $primary-light: #d6d9f3;
 $secondary-color: #bbdefb;
 $secondary-dark: #8aacc8;
 $secondary-light: #eeffff;
+
+/* Responsive vars */
+$layout-breakpoint-sm: 768px !default;
+$layout-breakpoint-md: 992px !default;
+$layout-breakpoint-lg: 1200px !default;
+
+@mixin media($min, $max) {
+  @media (min-width: #{$min}) and (max-width: #{$max - 1px}) {
+    @content;
+  }
+}
+
+@mixin media-min($min) {
+  @media (min-width: #{$min}) {
+    @content;
+  }
+}
+
+@mixin media-max($max) {
+  @media (max-width: #{$max - 1px}) {
+    @content;
+  }
+}
