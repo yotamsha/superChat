@@ -66,10 +66,14 @@ function getRelevantChannels(allChannels) {
 function channelsDataRetrieved(updatedData) {
   const updatedChannels = mergeCollectionChanges(this.state.channels, updatedData);
   addMessagesListeners.call(this, updatedChannels);
-  this.setState({
+  const newState = {
     allChannels: updatedChannels,
     channels: getRelevantChannels(updatedChannels)
-  });
+  };
+  if (!this.state.activeTab) {
+    newState.activeTab = newState.channels.length && newState.channels[0].id
+  }
+  this.setState(newState);
 }
 
 function addMessagesListeners(channels) {
@@ -79,12 +83,24 @@ function addMessagesListeners(channels) {
     ChannelAPI.onChannelMessagesChanges(channel.id, messages => {
       messages = _.sortBy(messages, 'createdAt');
       const updatedChannels = updateItemInCollection(this.state.allChannels, {id: channel.id, messages});
+      // don't set unread notification on activeTab.
+      const updatedUnreadChannels = (channel.id !== this.state.activeTab) ? _.assign({}, this.state.unreadChannels, {[channel.id]: true}) : this.state.unreadChannels;
       this.setState({
+        unreadChannels: updatedUnreadChannels,
         allChannels: updatedChannels,
         channels: getRelevantChannels(updatedChannels)
       });
     })
   })
+}
+
+function switchActiveChannel(channelId) {
+  if (channelId) {
+    this.setState({
+      activeTab: channelId,
+      unreadChannels: _.assign({}, this.state.unreadChannels, {[channelId]: false})
+    })
+  }
 }
 
 async function listenToUserChanges() {
@@ -151,6 +167,8 @@ class App extends Component {
   constructor() {
     super();
     this.state = {
+      unreadChannels: {},
+      activeTab: '',
       authState: AUTH_STATES.PRE_INIT,
       channels: [],
       currentUser: UserAPI.getDefaultUser()
@@ -160,6 +178,16 @@ class App extends Component {
     // listen to any changes in the channels list
     ChannelAPI.onPublicChannelsChanges(channelsDataRetrieved.bind(this));
   }
+
+  componentWillReceiveProps(newProps) {
+    // if (this.state.activeTab && this.state.unreadChannels[this.state.activeTab]) {
+    //   this.props.markChannelAsRead(this.state.activeTab);
+    // }
+
+    // if (!this.state.activeTab || this.state.activeTab === 'login') {
+    //   switchActiveChannel.call(this, newProps.channels.length && newProps.channels[0].id)
+    // }
+  }
   
   render() {
     return (
@@ -167,6 +195,9 @@ class App extends Component {
         <Chat user={this.state.currentUser}
               channels={this.state.channels}
               authState={this.state.authState}
+              unreadChannels={this.state.unreadChannels}
+              activeTab={this.state.activeTab}
+              switchActiveChannel={switchActiveChannel.bind(this)}
               loginUser={loginUser.bind(this)}
               updateUser={updateUser.bind(this)}>
         </Chat>

@@ -9,13 +9,6 @@ import appPropTypes from './appPropTypes';
 
 const {channelType, userType} = appPropTypes;
 
-function switchActiveChannel(channelId) {
-
-  this.setState({
-    activeTab: channelId
-  })
-}
-
 class Chat extends Component {
   constructor(props) {
     super(props);
@@ -25,7 +18,10 @@ class Chat extends Component {
 
   static propTypes = {
     channels: PropTypes.arrayOf(channelType),
+    activeTab: PropTypes.string,
+    unreadChannels: PropTypes.object,
     user: userType,
+    switchActiveChannel: PropTypes.func.isRequired,
     loginUser: PropTypes.func.isRequired,
     updateUser: PropTypes.func.isRequired,
     authState: PropTypes.string.isRequired
@@ -35,21 +31,11 @@ class Chat extends Component {
     channels: []
   };
 
-  componentWillReceiveProps(newProps) {
-    if (!this.state.activeTab || this.state.activeTab === 'login') {
-      this.setState({
-        activeTab: newProps.channels.length && newProps.channels[0].id
-      });
-    }
-  }
-
   async openNewChannel(users) {
     if (this.props.user.id) {
       // todo Only allow to open a single channel with a user.
-      const newChannel = await ChannelAPI.createChannel(users)
-      this.setState({
-        activeTab: newChannel.id
-      });
+      const newChannel = await ChannelAPI.createChannel(users);
+      this.props.switchActiveChannel(newChannel.id)
     } else {
       this.promptUserDetailsDialogIfNeeded();
     }
@@ -68,24 +54,23 @@ class Chat extends Component {
 
   promptUserDetailsDialogIfNeeded() {
     if (!this.props.user.id) {
-      this.setState({
-        activeTab: 'login'
-      });
+      this.props.switchActiveChannel('login')
     }
   }
 
   render() {
-    const channel = _.find(this.props.channels, {id: this.state.activeTab});
+    const channel = _.find(this.props.channels, {id: this.props.activeTab});
 
     return (
       <div className="chat">
         <NavigationBar
+          unreadChannels={this.props.unreadChannels}
           currentUser={this.props.user}
           channels={this.props.channels}
-          activeTab={this.state.activeTab}
-          onChannelSelected={switchActiveChannel.bind(this)}>
+          activeTab={this.props.activeTab}
+          onChannelSelected={this.props.switchActiveChannel}>
         </NavigationBar>
-        {this.state.activeTab === 'login' &&
+        {this.props.activeTab === 'login' &&
         <UserProfile user={this.props.user} updateUser={this.props.updateUser} loginUser={this.props.loginUser}></UserProfile>}
 
         {channel && (
@@ -96,7 +81,7 @@ class Chat extends Component {
             openNewChannel={this.openNewChannel.bind(this)}
             onInputFocus={this.promptUserDetailsDialogIfNeeded.bind(this)}
             onSubmitMessage={this.submitMessage.bind(this)}
-            onFocus={switchActiveChannel.bind(this)}
+            onFocus={this.props.switchActiveChannel}
             name={channel.title}
             isPublic={channel.isPublic}
             messages={channel.messages}

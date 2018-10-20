@@ -13,9 +13,14 @@ function getUsersStr(users, currentUser) {
   }, '').slice(0, -2)
 }
 
+function getNavBtnClasses(channel) {
+  return `nav-btn channel ${channel.id === this.props.activeTab ? 'active' : ''}`;
+}
+
 class NavigationBar extends Component {
   static propTypes = {
     currentUser: userType,
+    unreadChannels: PropTypes.object,
     channels: PropTypes.arrayOf(channelType),
     onChannelSelected: PropTypes.func.isRequired,
     activeTab: PropTypes.string,
@@ -25,18 +30,23 @@ class NavigationBar extends Component {
     return (
       <div className="nav-bar">
         <div className="pinned-tabs-container">
-          <button onClick={() => this.props.onChannelSelected('login')}
-            className={`nav-btn channels ${this.props.activeTab === 'login' ? 'active' : ''}`}>Profile</button>
-          {/*<button className="nav-btn members">Members</button>*/}
+          <div className="nav-btn-container">
+            <button onClick={() => this.props.onChannelSelected('login')}
+                    className={`nav-btn channels ${this.props.activeTab === 'login' ? 'active' : ''}`}>Profile
+            </button>
+          </div>
         </div>
         <div className="channel-tabs">
           {_.map(this.props.channels, channel => (
-            <button key={channel.id}
-                    className={`nav-btn channel ${channel.id === this.props.activeTab ? 'active' : ''}`}
-                    onClick={() => this.props.onChannelSelected(channel.id)}>
-              <span className="hashtag">{channel.isPublic ? '# ' : ''}</span>
-              {channel.title || getUsersStr(channel.members, this.props.currentUser)}
-            </button>
+            <div className="nav-btn-container">
+              <button key={channel.id}
+                      className={getNavBtnClasses.call(this, channel)}
+                      onClick={() => this.props.onChannelSelected(channel.id)}>
+                <span className="hashtag">{channel.isPublic ? '# ' : ''}</span>
+                {channel.title || getUsersStr(channel.members, this.props.currentUser)}
+              </button>
+              {this.props.unreadChannels[channel.id] && <div className="unread-indicator"></div>}
+            </div>
           ))}
         </div>
       </div>
