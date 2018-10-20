@@ -8,11 +8,16 @@ import { Picker } from 'emoji-mart'
 
 const {messageType, userType} = appPropTypes;
 
-function getUsersStr(users) {
-  return _.reduce(users, (str, user) => {
-    str += user.username + ", "
-    return str;
-  }, '').slice(0, -2)
+function getUsersStr(currentUserId, users) {
+  // return _.reduce(users, (str, user) => {
+  //   str += user.username + ", "
+  //   return str;
+  // }, '').slice(0, -2)
+  if (!users) {
+    return '';
+  }
+  const otherUser = _.find(users, user => user.id !== currentUserId)
+  return 'Me, ' + otherUser.username;
 }
 
 class Channel extends Component {
@@ -31,6 +36,8 @@ class Channel extends Component {
     name: PropTypes.string,
     isPublic: PropTypes.bool,
     isActive: PropTypes.bool,
+    isCollapsed: PropTypes.bool,
+    toggleChannelWindowExpanded: PropTypes.func.isRequired,
     openNewChannel: PropTypes.func.isRequired,
     onSubmitMessage: PropTypes.func.isRequired,
     onInputFocus: PropTypes.func.isRequired,
@@ -68,7 +75,7 @@ class Channel extends Component {
     if (this.props.isPublic) {
       return this.props.name || '';
     }
-    return getUsersStr(this.props.members)
+    return getUsersStr(this.props.currentUser.id, this.props.members)
   }
 
   openCloseEmojisList() {
@@ -84,10 +91,17 @@ class Channel extends Component {
 
   render() {
     return (
-      <div className={`app-tab channel-tab ${this.props.isActive ? 'active' : ''}`}>
+      <div className={`app-tab channel-tab ${this.props.isCollapsed ? 'collapsed' : ''} ${this.props.isActive ? 'active' : ''}`}>
         <div className="tab-header">
           <h3 className="tab-title">{`${this.getTitle()}`}</h3>
-          <div className="tab-users">
+          <div className="header-actions-btns">
+            {!this.props.isPublic &&
+            <button className="btn close" onClick={() => this.props.toggleChannelWindowExpanded(this.props.id, true)}>
+              <FontAwesome name='close' />
+            </button>}
+            <button className="btn minimize" onClick={() => this.props.toggleChannelWindowExpanded(this.props.id)}>
+              <FontAwesome name='window-minimize' />
+            </button>
           </div>
         </div>
 

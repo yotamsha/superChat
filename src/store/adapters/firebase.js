@@ -117,7 +117,7 @@ const dbActions = {
   },
 
   onAuthStateChanged: (cb) => {
-    firebase.auth().onAuthStateChanged(function (user) {
+    firebase.auth().onAuthStateChanged(user => {
       if (user) {
         // User is signed in.
         cb(user);
@@ -126,6 +126,11 @@ const dbActions = {
         cb(null)
       }
     });
+  },
+
+  removeDocument: (tenantId, collectionId, docId) => {
+    let docRef = db.collection(tenantsCollection).doc(tenantId).collection(collectionId).doc(docId);
+    return docRef.delete();
   }
 
 };

@@ -27,7 +27,7 @@ class UserProfile extends Component {
         <div className="tab-header">
           <h3 className="tab-title">User Details</h3>
         </div>
-        <img className="user-img" src={process.env.PUBLIC_URL + '/images/profile-back.jpg'}></img>
+        <img className="user-img" src={process.env.PUBLIC_URL + '/images/profile-back.jpg'} alt=''></img>
         <input id="username" placeholder="Username" defaultValue={this.props.user.username}
                onBlur={(event) => {
                  this.chosenUsername = event.target.value

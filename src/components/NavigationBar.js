@@ -22,7 +22,7 @@ class NavigationBar extends Component {
     currentUser: userType,
     unreadChannels: PropTypes.object,
     channels: PropTypes.arrayOf(channelType),
-    onChannelSelected: PropTypes.func.isRequired,
+    onTabSelected: PropTypes.func.isRequired,
     activeTab: PropTypes.string,
   }
 
@@ -31,17 +31,17 @@ class NavigationBar extends Component {
       <div className="nav-bar">
         <div className="pinned-tabs-container">
           <div className="nav-btn-container">
-            <button onClick={() => this.props.onChannelSelected('login')}
+            <button onClick={() => this.props.onTabSelected('login')}
                     className={`nav-btn channels ${this.props.activeTab === 'login' ? 'active' : ''}`}>Profile
             </button>
           </div>
         </div>
         <div className="channel-tabs">
           {_.map(this.props.channels, channel => (
-            <div className="nav-btn-container">
-              <button key={channel.id}
+            <div key={channel.id} className="nav-btn-container">
+              <button
                       className={getNavBtnClasses.call(this, channel)}
-                      onClick={() => this.props.onChannelSelected(channel.id)}>
+                      onClick={() => this.props.onTabSelected(channel.id)}>
                 <span className="hashtag">{channel.isPublic ? '# ' : ''}</span>
                 {channel.title || getUsersStr(channel.members, this.props.currentUser)}
               </button>

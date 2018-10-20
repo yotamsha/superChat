@@ -67,8 +67,8 @@ export default {
      * remove channel and all it's messages.
      * @param channelId
      */
-    async removeChannel(channelId) {
-
+    removeChannel(channelId) {
+      return store.removeDocument(tenantId, collectionName, channelId);
     },
     /**
      * Add user to channel

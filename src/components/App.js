@@ -36,7 +36,7 @@ function updateItemInCollection(collection, updatedItem) {
   const updatedCollection = _.cloneDeep(collection)
   const index = _.findIndex(updatedCollection, {id: updatedItem.id});
   if (index >= 0) {
-    updatedCollection[index] = _.assign(updatedCollection[index], updatedItem);
+    updatedCollection[index] = _.assign({}, updatedCollection[index], updatedItem);
   } else {
     updatedCollection.push(updatedItem);
     //console.warn('tried to updated item with non-existing id: ' + updatedItem.id)
@@ -99,13 +99,19 @@ function addMessagesListeners(channels) {
   })
 }
 
-function switchActiveChannel(channelId) {
-  if (channelId) {
+function switchActiveTab(tabId) {
+  if (tabId === 'login') {
     this.setState({
-      activeTab: channelId,
-      unreadChannels: _.assign({}, this.state.unreadChannels, {[channelId]: false})
+      activeTab: tabId
     })
+    return;
   }
+  this.setState({
+    activeTab: tabId,
+    channels: updateItemInCollection(this.state.channels, {id: tabId, isCollapsed: false }),
+    unreadChannels: _.assign({}, this.state.unreadChannels, {[tabId]: false})
+  })
+
 }
 
 async function listenToUserChanges() {
@@ -171,6 +177,20 @@ async function updateUser(user) {
   });
 }
 
+async function toggleChannelWindowExpanded(channelId, removeChat) {
+  let updatedChannels;
+
+  if (removeChat) {
+    await ChannelAPI.removeChannel(channelId);
+    updatedChannels = _.filter(this.state.channels, channel => channel.id !== channelId);
+  } else {
+    const isCollapsed = _.find(this.state.channels, {id: channelId}).isCollapsed;
+    updatedChannels = updateItemInCollection(this.state.channels, {id: channelId, isCollapsed: !isCollapsed })
+  }
+  this.setState({
+    channels: updatedChannels
+  });
+}
 class App extends Component {
   constructor() {
     super();
@@ -195,7 +215,8 @@ class App extends Component {
               authState={this.state.authState}
               unreadChannels={this.state.unreadChannels}
               activeTab={this.state.activeTab}
-              switchActiveChannel={switchActiveChannel.bind(this)}
+              toggleChannelWindowExpanded={toggleChannelWindowExpanded.bind(this)}
+              switchActiveTab={switchActiveTab.bind(this)}
               loginUser={loginUser.bind(this)}
               updateUser={updateUser.bind(this)}>
         </Chat>

@@ -21,7 +21,8 @@ class Chat extends Component {
     activeTab: PropTypes.string,
     unreadChannels: PropTypes.object,
     user: userType,
-    switchActiveChannel: PropTypes.func.isRequired,
+    toggleChannelWindowExpanded: PropTypes.func.isRequired,
+    switchActiveTab: PropTypes.func.isRequired,
     loginUser: PropTypes.func.isRequired,
     updateUser: PropTypes.func.isRequired,
     authState: PropTypes.string.isRequired
@@ -35,7 +36,7 @@ class Chat extends Component {
     if (this.props.user.id) {
       // todo Only allow to open a single channel with a user.
       const newChannel = await ChannelAPI.createChannel(users);
-      this.props.switchActiveChannel(newChannel.id)
+      this.props.switchActiveTab(newChannel.id)
     } else {
       this.promptUserDetailsDialogIfNeeded();
     }
@@ -54,7 +55,7 @@ class Chat extends Component {
 
   promptUserDetailsDialogIfNeeded() {
     if (!this.props.user.id) {
-      this.props.switchActiveChannel('login')
+      this.props.switchActiveTab('login')
     }
   }
 
@@ -68,7 +69,7 @@ class Chat extends Component {
           currentUser={this.props.user}
           channels={this.props.channels}
           activeTab={this.props.activeTab}
-          onChannelSelected={this.props.switchActiveChannel}>
+          onTabSelected={this.props.switchActiveTab}>
         </NavigationBar>
         {this.props.activeTab === 'login' &&
         <UserProfile user={this.props.user} updateUser={this.props.updateUser} loginUser={this.props.loginUser}></UserProfile>}
@@ -78,15 +79,16 @@ class Chat extends Component {
             key={channel.id}
             id={channel.id}
             currentUser={this.props.user}
-            openNewChannel={this.openNewChannel.bind(this)}
-            onInputFocus={this.promptUserDetailsDialogIfNeeded.bind(this)}
-            onSubmitMessage={this.submitMessage.bind(this)}
-            onFocus={this.props.switchActiveChannel}
+            onFocus={this.props.switchActiveTab}
             name={channel.title}
             isPublic={channel.isPublic}
             messages={channel.messages}
-            members={channel.members}>
-          </Channel>)}
+            isCollapsed={channel.isCollapsed}
+            members={channel.members}
+            openNewChannel={this.openNewChannel.bind(this)}
+            onInputFocus={this.promptUserDetailsDialogIfNeeded.bind(this)}
+            onSubmitMessage={this.submitMessage.bind(this)}
+            toggleChannelWindowExpanded={this.props.toggleChannelWindowExpanded} />)}
       </div>
     );
   }
