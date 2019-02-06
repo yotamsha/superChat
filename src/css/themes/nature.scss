@@ -1,8 +1,8 @@
 @import "../mixins.scss";
 .App {
-  &.default {
-    $primary-color: #3F51B5;
-    $primary-light: #d6d9f3;
+  &.nature {
+    $primary-color: #2d964c;
+    $primary-light: #7dbc88;
 
     @include theme($primary-color, $primary-light);
   }

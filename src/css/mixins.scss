@@ -13,6 +13,9 @@
         }
 
         .tab-messages {
+          .messages .msg-row .username {
+            color: $primary-color;
+          }
           .messages .msg-row.me .msg-content {
             background-color: $primary-light;
           }
