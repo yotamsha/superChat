@@ -1,5 +1,8 @@
+
 #root-aoxie43dhjf456fkloia39 {
   @import "./../css/variables.scss";
+  @import "./../css/themes/dark.scss";
+  @import "./../css/themes/default.scss";
 
   .App {
     font-family: 'Roboto', sans-serif, Arial;
@@ -106,7 +109,9 @@
 
       @include media-max($layout-breakpoint-sm) {
         left: 0;
+        top:0;
         width: 100%;
+        height: auto;
       }
 
       .tab-header {
@@ -163,6 +168,7 @@
         }
 
         .tab-messages {
+          height: 100%;
           display: flex;
           flex-direction: column;
           background-color: #fdfdfd;
@@ -171,8 +177,7 @@
           -moz-box-shadow: inset 0px 2px 2px 0px rgba(204, 204, 204, 0.90);
           box-shadow: inset 0px 2px 2px 0px rgba(204, 204, 204, 0.90);
           .messages {
-            height: 337px;
-            flex-grow: 1;
+            flex-grow: 10;
             list-style: none;
             font-size: 15px;
             margin: 0;
@@ -220,6 +225,8 @@
             padding-top: 10px;
             background-color: #dfe5eb;
             z-index: 1;
+            align-self: flex-end;
+
             input {
               height: 43px;
               width: 295px;

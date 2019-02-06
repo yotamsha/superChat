@@ -1,0 +1,9 @@
+@import "../mixins.scss";
+.App {
+  &.dark{
+    $primary-color:#000000;
+    $primary-light: #d6d6d6;
+
+    @include theme($primary-color, $primary-light);
+  }
+}

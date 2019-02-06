@@ -201,6 +201,7 @@ class App extends Component {
       activeTab: '',
       authState: AUTH_STATES.PRE_INIT,
       channels: [],
+      uiProps: config.uiProps || {},
       currentUser: UserAPI.getDefaultUser()
     };
 
@@ -211,7 +212,7 @@ class App extends Component {
   
   render() {
     return (
-      <div className="App">
+      <div className={`App ${this.state.uiProps.theme}`}>
         <Chat user={this.state.currentUser}
               channels={this.state.channels}
               authState={this.state.authState}
