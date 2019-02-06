@@ -208,6 +208,12 @@ class App extends Component {
     listenToUserChanges.call(this);
     // listen to any changes in the channels list
     ChannelAPI.onPublicChannelsChanges(channelsDataRetrieved.bind(this));
+    const self = this
+    window.changeTheme = (uiProps) => {
+      self.setState({
+        uiProps
+      })
+    }
   }
   
   render() {
