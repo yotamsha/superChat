@@ -209,7 +209,7 @@ class App extends Component {
     // listen to any changes in the channels list
     ChannelAPI.onPublicChannelsChanges(channelsDataRetrieved.bind(this));
     const self = this
-    window.changeTheme = (uiProps) => {
+    window.changeWidgetProps = uiProps => {
       self.setState({
         uiProps
       })
@@ -220,6 +220,7 @@ class App extends Component {
     return (
       <div className={`App ${this.state.uiProps.theme || ''}`}>
         <Chat user={this.state.currentUser}
+              title = {this.state.uiProps.title}
               channels={this.state.channels}
               authState={this.state.authState}
               unreadChannels={this.state.unreadChannels}

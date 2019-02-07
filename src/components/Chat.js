@@ -21,6 +21,7 @@ class Chat extends Component {
     activeTab: PropTypes.string,
     unreadChannels: PropTypes.object,
     user: userType,
+    title: PropTypes.string,
     toggleChannelWindowExpanded: PropTypes.func.isRequired,
     switchActiveTab: PropTypes.func.isRequired,
     loginUser: PropTypes.func.isRequired,
@@ -80,7 +81,7 @@ class Chat extends Component {
             id={channel.id}
             currentUser={this.props.user}
             onFocus={this.props.switchActiveTab}
-            name={channel.title}
+            name={this.props.title || channel.title}
             isPublic={channel.isPublic}
             messages={channel.messages}
             isCollapsed={channel.isCollapsed}
