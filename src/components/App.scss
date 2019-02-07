@@ -322,13 +322,14 @@
 
         #username {
           height: 50px;
-          width: 250px;
+          width: 60%;
           border-radius: 30px;
           border: 1px solid #ecebeb;
           padding: 5px 15px;
           font-size: 16px;
+          -webkit-box-sizing: border-box;
           box-sizing: border-box;
-          margin-left: 45px;
+          margin-left: 10%;
           outline: 0;
         }
         button {

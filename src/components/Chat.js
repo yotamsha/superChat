@@ -66,6 +66,7 @@ class Chat extends Component {
     return (
       <div className="chat">
         <NavigationBar
+          title={this.props.title}
           unreadChannels={this.props.unreadChannels}
           currentUser={this.props.user}
           channels={this.props.channels}

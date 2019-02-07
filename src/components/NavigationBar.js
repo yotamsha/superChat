@@ -24,6 +24,7 @@ class NavigationBar extends Component {
     channels: PropTypes.arrayOf(channelType),
     onTabSelected: PropTypes.func.isRequired,
     activeTab: PropTypes.string,
+    title: PropTypes.string
   }
 
   render() {
@@ -43,7 +44,7 @@ class NavigationBar extends Component {
                       className={getNavBtnClasses.call(this, channel)}
                       onClick={() => this.props.onTabSelected(channel.id)}>
                 <span className="hashtag">{channel.isPublic ? '# ' : ''}</span>
-                {channel.title || getUsersStr(channel.members, this.props.currentUser)}
+                {(channel.isPublic && this.props.title) || channel.title || getUsersStr(channel.members, this.props.currentUser)}
               </button>
               {this.props.unreadChannels[channel.id] && <div className="unread-indicator"></div>}
             </div>
