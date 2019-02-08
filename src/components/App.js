@@ -118,7 +118,6 @@ function switchActiveTab(tabId) {
 
 async function listenToUserChanges() {
   UserAPI.onAuthStateChanged(async user => {
-    console.log('Current User: ', user)
     if (user) {
       // if we are in first-load state:
       if (this.state.authState === AUTH_STATES.PRE_INIT) {
@@ -154,7 +153,6 @@ async function listenToUserChanges() {
       this.setState({
         authState: AUTH_STATES.LOGGED_OUT
       });
-      console.log('User logged out.')
     }
   })
 }
@@ -218,7 +216,7 @@ class App extends Component {
   
   render() {
     return (
-      <div className={`App ${this.state.uiProps.theme || ''}`}>
+      <div dir="ltr" className={`App ${this.state.uiProps.theme || ''}`}>
         <Chat user={this.state.currentUser}
               title = {this.state.uiProps.title}
               channels={this.state.channels}

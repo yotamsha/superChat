@@ -8,6 +8,11 @@
   @import "./../css/themes/default.scss";
 
   .App {
+    direction: ltr;
+    * {
+      box-sizing: initial;
+      -webkit-box-sizing: initial;
+    }
     font-family: 'Roboto', sans-serif, Arial;
     h1, h2, h3, h4, h5, h6 {
       margin: 0px;
@@ -37,7 +42,9 @@
   }
 
   .chat {
+    z-index:98;
     .nav-bar {
+      z-index: 100;
       position: fixed;
       width: 100%;
       bottom: 0;
@@ -96,7 +103,7 @@
     }
 
     .app-tab {
-      z-index: 2;
+      z-index:100;
       background-color: #ffffff;
       height: 450px;
       width: 400px;
@@ -171,6 +178,8 @@
         }
 
         .tab-messages {
+          -webkit-box-sizing: initial;
+          box-sizing: initial;
           height: 100%;
           display: flex;
           flex-direction: column;
@@ -189,6 +198,7 @@
             .msg-row {
               display: flex;
               .msg-content {
+                text-align: left;
                 line-height: 20px;
                 min-height: 20px;
                 max-width: 300px;
@@ -227,7 +237,7 @@
             padding-bottom: 10px;
             padding-top: 10px;
             background-color: #dfe5eb;
-            z-index: 1;
+            z-index: 99;
             align-self: flex-end;
 
             input {
