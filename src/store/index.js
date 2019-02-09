@@ -1,5 +1,8 @@
-import firebaseStoreAdapter from './adapters/firebase';
+import getStore from './adapters/firebase';
 
+const tenantsStore = getStore()
+const baseStore = getStore('stats')
 export {
-  firebaseStoreAdapter as store
+  tenantsStore as store,
+  baseStore
 }

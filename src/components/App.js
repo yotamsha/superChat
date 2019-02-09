@@ -2,6 +2,7 @@ import _ from 'lodash';
 import React, {Component} from 'react';
 import Chat from './Chat';
 import './App.css';
+import ReportAPI from './../model/ReportAPI'
 import ChannelAPI from './../model/ChannelAPI'
 import UserAPI from "./../model/UserAPI";
 import sessionProvider from "./../services/sessionProvider";
@@ -212,6 +213,10 @@ class App extends Component {
         uiProps
       })
     }
+  }
+
+  componentDidMount() {
+    ReportAPI.reportEvent('widget_view')
   }
   
   render() {
