@@ -9,15 +9,12 @@
 
   .App {
     direction: ltr;
-    * {
-      box-sizing: initial;
-      -webkit-box-sizing: initial;
-    }
     font-family: 'Roboto', sans-serif, Arial;
-    h1, h2, h3, h4, h5, h6 {
+    h1, h2, h3, h4, h5, h6, ul, li, input ,button {
+      all:unset;
       font-weight: normal;
     }
-    blockquote, body, button, caption, dd, dl, fieldset, figure, form, iframe, input, h1, h2, h3, h4, h5, h6, hr, label, legend, ol, optgroup, p, pre, table, td, textarea, th, ul {
+    blockquote, button, caption, dd, dl, fieldset, figure, form, iframe, input, h1, h2, h3, h4, h5, h6, hr, label, legend, ol, optgroup, p, pre, table, td, textarea, th, ul {
       margin: 0;
       padding: 0;
     }
@@ -29,7 +26,10 @@
     }
     button {
       font-family: 'Roboto', sans-serif, Arial;
-
+    }
+    * {
+      box-sizing: initial;
+      -webkit-box-sizing: initial;
     }
 
     ::-webkit-input-placeholder { /* Chrome/Opera/Safari */
@@ -47,9 +47,9 @@
   }
 
   .chat {
-    z-index:998;
+    z-index:9998;
     .nav-bar {
-      z-index: 1000;
+      z-index: 10000;
       position: fixed;
       width: 100%;
       bottom: 0;
@@ -66,7 +66,7 @@
         margin-right: 10px;
         .nav-btn-container {
           .nav-btn {
-            min-width: 30px;
+            min-width: 22px;
             font-size: 18px;
           }
         }
@@ -114,7 +114,7 @@
     }
 
     .app-tab {
-      z-index:1000;
+      z-index:10000;
       background-color: #ffffff;
       height: 450px;
       width: 400px;
@@ -212,6 +212,7 @@
             .msg-row {
               display: flex;
               .msg-content {
+                font-size: 14px;
                 text-align: left;
                 line-height: 20px;
                 min-height: 20px;
@@ -230,6 +231,10 @@
               }
               a {
                 cursor: pointer;
+                &:hover {
+                  text-decoration: underline;
+                }
+
               }
               .username {
                 display: block;
@@ -251,7 +256,7 @@
             padding-bottom: 10px;
             padding-top: 10px;
             background-color: #dfe5eb;
-            z-index: 999;
+            z-index: 9999;
             align-self: flex-end;
 
             input {
@@ -370,6 +375,7 @@
           span {
             color: #fff;
             font-size: 19px;
+            margin-left: 15px;
           }
         }
 
