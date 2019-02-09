@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import appPropTypes from './appPropTypes';
+import FontAwesome from 'react-fontawesome';
 
 const {channelType, userType} = appPropTypes;
 
@@ -33,7 +34,9 @@ class NavigationBar extends Component {
         <div className="pinned-tabs-container">
           <div className="nav-btn-container">
             <button onClick={() => this.props.onTabSelected('login')}
-                    className={`nav-btn channels ${this.props.activeTab === 'login' ? 'active' : ''}`}>Profile
+                    className={`nav-btn channels ${this.props.activeTab === 'login' ? 'active' : ''}`}>
+              <FontAwesome name='cogs' />
+
             </button>
           </div>
         </div>
