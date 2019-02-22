@@ -43,7 +43,12 @@ const getStore = path => {
     },
 
     onDocumentChanges: (baseId, collectionId, docId, cb) => {
-      db.collection(baseCollection).doc(baseId).collection(collectionId).doc(docId).onSnapshot(snapshot => {
+      let ref = db.collection(baseCollection).doc(baseId)
+      if (collectionId && docId) {
+        ref = ref.collection(collectionId).doc(docId)
+      }
+
+      ref.onSnapshot(snapshot => {
         cb(snapshotDocumentToArray(snapshot));
       });
     },

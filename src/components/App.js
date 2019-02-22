@@ -4,6 +4,7 @@ import Chat from './Chat';
 import './App.css';
 import ReportAPI from './../model/ReportAPI'
 import ChannelAPI from './../model/ChannelAPI'
+import WidgetAPI from './../model/WidgetAPI'
 import UserAPI from "./../model/UserAPI";
 import sessionProvider from "./../services/sessionProvider";
 import configProvider from './../services/configProvider'
@@ -70,6 +71,19 @@ function channelsDataRetrieved(updatedData) {
     newState.activeTab = getMainChannel(newState.channels)
   }
   this.setState(newState);
+}
+
+function widgetDataChanged(data) {
+  if (data.widgetProps) {
+    this.setState({
+      uiProps: JSON.parse(data.widgetProps)
+    })
+  } else {
+    this.setState({
+      uiProps: configProvider.getConfig().uiProps || {}
+    })
+
+  }
 }
 
 function addMessagesListeners(channels) {
@@ -180,6 +194,7 @@ async function toggleChannelWindowExpanded(channelId, removeChat) {
     channels: updatedChannels
   });
 }
+
 class App extends Component {
   constructor() {
     super();
@@ -196,6 +211,7 @@ class App extends Component {
       listenToUserChanges.call(this);
       // listen to any changes in the channels list
       ChannelAPI.onPublicChannelsChanges(channelsDataRetrieved.bind(this));
+      WidgetAPI.onWidgetChanges(widgetDataChanged.bind(this));
     }
 
     resetListeners()
@@ -207,10 +223,11 @@ class App extends Component {
       })
     }
     window.changeAppId = appId => {
-      resetListeners()
       self.setState({
+        activeTab: null,
         appId
       })
+      resetListeners()
     }
   }
 
