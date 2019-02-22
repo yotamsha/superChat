@@ -10,24 +10,12 @@ import configProvider from './../services/configProvider'
 import constants from './../utils/constants'
 const {AUTH_STATES} = constants;
 
-const config = configProvider.getConfig();
+//const config = configProvider.getConfig();
 /**
  *
  * TODOS
  *
- * 1) handle case where there is no space for displaying all conversations (facebook only show the last opened chats to
- * a certain number and then when you close certain chat it shows those that were previously opened instead)
- *
- * 4) Work on UI:
- * - a cool feature could be that when hovering on a username you can choose to start a private channel
- * or add to an open existing channel
- * - Before user picks a username - he should be able to see all the recently active public channels.
- * only when he is about to write we ask him for his username.
- *
- *
- * 6) Only allow to open a single channel with each user.
- *
- * 7) When a user is logged-in to a tenant and switches to another tenant he is not does not have a session but he does have
+ * When a user is logged-in to a tenant and switches to another tenant he does not have a session but he does have
  * a store session. I can decide that for now the authentication will be across tenants but
  * eventually I want the tenants to be completely separate.
  * - My issue is that when I log out from one tenant I lose the token of the last one.
@@ -142,7 +130,7 @@ async function listenToUserChanges() {
         // create or update the user in the collection.
         const newUser = _.assign({}, this.state.currentUser, {id: user.uid}, this.newUserDetails);
         await UserAPI.createUser(newUser);
-        sessionProvider.set(config.appId, JSON.stringify({user: newUser}));
+        sessionProvider.set(configProvider.getConfig().appId, JSON.stringify({user: newUser}));
         this.setState({
           currentUser: newUser,
           authState: AUTH_STATES.LOGGED_IN
@@ -171,7 +159,7 @@ async function loginUser(userDetails) {
 
 async function updateUser(user) {
   const updatedUser = await UserAPI.updateUser(user)
-  sessionProvider.set(config.appId, JSON.stringify({user: updatedUser}));
+  sessionProvider.set(configProvider.getConfig().appId, JSON.stringify({user: updatedUser}));
   this.setState({
     activeTab: getMainChannel(this.state.channels),
     currentUser: updatedUser
@@ -200,17 +188,28 @@ class App extends Component {
       activeTab: '',
       authState: AUTH_STATES.PRE_INIT,
       channels: [],
-      uiProps: config.uiProps || {},
+      appId: configProvider.getConfig().appId,
+      uiProps: configProvider.getConfig().uiProps || {},
       currentUser: UserAPI.getDefaultUser()
     };
+    const resetListeners = () => {
+      listenToUserChanges.call(this);
+      // listen to any changes in the channels list
+      ChannelAPI.onPublicChannelsChanges(channelsDataRetrieved.bind(this));
+    }
 
-    listenToUserChanges.call(this);
-    // listen to any changes in the channels list
-    ChannelAPI.onPublicChannelsChanges(channelsDataRetrieved.bind(this));
+    resetListeners()
+
     const self = this
     window.changeWidgetProps = uiProps => {
       self.setState({
         uiProps
+      })
+    }
+    window.changeAppId = appId => {
+      resetListeners()
+      self.setState({
+        appId
       })
     }
   }

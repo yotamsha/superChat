@@ -3,11 +3,10 @@ import {store} from '../store/index';
 import configProvider from '../services/configProvider'
 
 const collectionName = 'channels';
-const tenantId = configProvider.getConfig().appId;
-
+const getTenantId = () => configProvider.getConfig().appId
 async function populatedListWithRelatedCollection(list, fieldToPopulate, populateFromCollection,) {
   return (await Promise.all(list.map(async item => {
-    const members = await store.populateFromCollection(tenantId, populateFromCollection, item[fieldToPopulate]);
+    const members = await store.populateFromCollection(getTenantId(), populateFromCollection, item[fieldToPopulate]);
     return _.assign({}, item, {members})
   })));
 }
@@ -18,11 +17,11 @@ export default {
     },
 
     onChannelChanges(channelId, cb) {
-      store.onDocumentChanges(tenantId, collectionName, channelId, cb);
+      store.onDocumentChanges(getTenantId(), collectionName, channelId, cb);
     },
 
     onChannelMessagesChanges(channelId, cb) {
-      store.onDocumentRelatedChanges(tenantId, collectionName, channelId, 'messages', cb);
+      store.onDocumentRelatedChanges(getTenantId(), collectionName, channelId, 'messages', cb);
     },
 
     async onPublicChannelsChanges(cb) {
@@ -31,7 +30,7 @@ export default {
           condition: '==',
           value: true,
         }]
-        store.onCollectionChanges(tenantId, collectionName, filters, async (results) => {
+        store.onCollectionChanges(getTenantId(), collectionName, filters, async (results) => {
           let populatedResults = await populatedListWithRelatedCollection(results, 'members', 'users');
           cb(populatedResults);
         });
@@ -43,7 +42,7 @@ export default {
         condition: 'array-contains',
         value: userId,
       }];
-      store.onCollectionChanges(tenantId, collectionName, filters, async (results) => {
+      store.onCollectionChanges(getTenantId(), collectionName, filters, async (results) => {
         let populatedResults = await populatedListWithRelatedCollection(results, 'members', 'users');
         cb(populatedResults);
       });
@@ -61,14 +60,14 @@ export default {
             members: usersToAdd,
             isPublic: false
         };
-        return store.createDocument(tenantId, collectionName, newChannel);
+        return store.createDocument(getTenantId(), collectionName, newChannel);
     },
     /**
      * remove channel and all it's messages.
      * @param channelId
      */
     removeChannel(channelId) {
-      return store.removeDocument(tenantId, collectionName, channelId);
+      return store.removeDocument(getTenantId(), collectionName, channelId);
     },
     /**
      * Add user to channel
@@ -84,7 +83,7 @@ export default {
      * @param messageId
      */
     async addMessageToChannel(channelId, message, user) {
-        return await store.createRelated(tenantId, collectionName, channelId, 'messages', {
+        return await store.createRelated(getTenantId(), collectionName, channelId, 'messages', {
             text: message,
             createdAt: new Date().getTime(),
             user

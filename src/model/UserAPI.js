@@ -3,10 +3,10 @@ import sessionProvider from "../services/sessionProvider";
 import configProvider from '../services/configProvider'
 
 const collectionId = 'users'
-const tenantId = configProvider.getConfig().appId;
+const getTenantId = () => configProvider.getConfig().appId
 
 function getSessionUser() {
-  return sessionProvider.has(tenantId) && JSON.parse(sessionProvider.get(tenantId)).user;
+  return sessionProvider.has(getTenantId()) && JSON.parse(sessionProvider.get(getTenantId())).user;
 }
 
 const UserAPI = {
@@ -41,11 +41,11 @@ const UserAPI = {
   },
 
   createUser: user => {
-    store.createDocument(tenantId, collectionId, user);
+    store.createDocument(getTenantId(), collectionId, user);
   },
 
   updateUser: user => {
-    return store.updateDocument(tenantId, collectionId, user);
+    return store.updateDocument(getTenantId(), collectionId, user);
   }
 };
 
