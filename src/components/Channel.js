@@ -45,8 +45,11 @@ class Channel extends Component {
     currentUser: userType
   };
 
-  scrollToBottom = () => {
-    this.messagesEnd.scrollIntoView({behavior: "instant"});
+  scrollToBottom() {
+    const scrollHeight = this.messageList.scrollHeight;
+    const height = this.messageList.clientHeight;
+    const maxScrollTop = scrollHeight - height;
+    this.messageList.scrollTop = maxScrollTop > 0 ? maxScrollTop : 0;
   }
 
   async submitMessage(msg, channelId) {
@@ -106,7 +109,7 @@ class Channel extends Component {
         </div>
 
         <div className="tab-messages">
-          <ul className="messages">
+          <ul className="messages" ref={(el) => this.messageList = el}>
             {_.map(this.props.messages, msg => {
               const ownerMsg = msg.user.id === this.props.currentUser.id;
 
@@ -120,9 +123,6 @@ class Channel extends Component {
                 </div>
               </li>
             })}
-            <li ref={(el) => {
-              this.messagesEnd = el;
-            }}></li>
           </ul>
           <div className={'emojis-list ' + (this.state.emojisListOpen ? 'open' : '')}>
             <div className="list-container">
