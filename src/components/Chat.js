@@ -65,17 +65,6 @@ class Chat extends Component {
 
     return (
       <div className="chat">
-        <NavigationBar
-          title={this.props.title}
-          unreadChannels={this.props.unreadChannels}
-          currentUser={this.props.user}
-          channels={this.props.channels}
-          activeTab={this.props.activeTab}
-          onTabSelected={this.props.switchActiveTab}>
-        </NavigationBar>
-        {this.props.activeTab === 'login' &&
-        <UserProfile user={this.props.user} updateUser={this.props.updateUser} loginUser={this.props.loginUser}></UserProfile>}
-
         {channel && (
           <Channel
             key={channel.id}
@@ -91,6 +80,19 @@ class Chat extends Component {
             onInputFocus={this.promptUserDetailsDialogIfNeeded.bind(this)}
             onSubmitMessage={this.submitMessage.bind(this)}
             toggleChannelWindowExpanded={this.props.toggleChannelWindowExpanded} />)}
+
+        {this.props.activeTab === 'login' &&
+          <UserProfile user={this.props.user} updateUser={this.props.updateUser} loginUser={this.props.loginUser}></UserProfile>
+        }
+
+        <NavigationBar
+          title={this.props.title}
+          unreadChannels={this.props.unreadChannels}
+          currentUser={this.props.user}
+          channels={this.props.channels}
+          activeTab={this.props.activeTab}
+          onTabSelected={this.props.switchActiveTab}>
+        </NavigationBar>
       </div>
     );
   }

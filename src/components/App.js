@@ -170,9 +170,11 @@ async function listenToUserChanges() {
 
 async function loginUser(userDetails) {
   this.newUserDetails = userDetails;
+  const mainChannel = getMainChannel(this.state.channels);
 
   this.setState({
-    activeTab: getMainChannel(this.state.channels),
+    channels: updateItemInCollection(this.state.channels, {id: mainChannel, isCollapsed: false }),
+    activeTab: mainChannel,
     authState: AUTH_STATES.PENDING_LOGIN
   });
 
@@ -182,8 +184,10 @@ async function loginUser(userDetails) {
 async function updateUser(user) {
   const updatedUser = await UserAPI.updateUser(user)
   sessionProvider.set(configProvider.getConfig().appId, JSON.stringify({user: updatedUser}));
+  const mainChannel = getMainChannel(this.state.channels)
   this.setState({
-    activeTab: getMainChannel(this.state.channels),
+    channels: updateItemInCollection(this.state.channels, {id: mainChannel, isCollapsed: false }),
+    activeTab: mainChannel,
     currentUser: updatedUser
   });
 }
@@ -243,7 +247,7 @@ class App extends Component {
   
   render() {
     return (
-      <div dir="ltr" className={`App ${this.state.uiProps.theme || ''}`}>
+      <div dir="ltr" className={`App ${this.state.uiProps.theme || ''} ${this.state.uiProps.layout || ''}`}>
         <Chat user={this.state.currentUser}
               title = {this.state.uiProps.title}
               channels={this.state.channels}

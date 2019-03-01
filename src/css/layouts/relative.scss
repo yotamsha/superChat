@@ -1,0 +1,53 @@
+@import "../variables.scss";
+.App {
+  &.relative {
+    .chat {
+      .nav-bar {
+        width: 100%;
+        max-width: 800px;
+        position: relative;
+        clear: both;
+      }
+      .app-tab {
+        //z-index: 10000;
+        //background-color: #ffffff;
+        height: 500px;
+        width: 100%;
+        max-width: 800px;
+        position: relative;
+        float: left;
+        bottom:0;
+        &.channel-tab {
+          .tab-messages .message-input input {
+            width: 85%;
+          }
+
+          .tab-header {
+            .header-actions-btns {
+              display: none;
+            }
+          }
+
+          @include media-max($layout-breakpoint-sm) {
+            display: block;
+            .tab-messages .message-input {
+              padding-bottom: 60px;
+              input {
+                width: 70%;
+              }
+            }
+          }
+        }
+        &.user-tab {
+          .user-img {
+            height: 300px;
+            width: 300px;
+          }
+          #username {
+            width: 74%;
+          }
+        }
+      }
+    }
+  }
+}

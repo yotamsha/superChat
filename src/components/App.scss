@@ -6,6 +6,7 @@
   @import "./../css/themes/bold.scss";
   @import "./../css/themes/nature.scss";
   @import "./../css/themes/default.scss";
+  @import "./../css/layouts/relative.scss";
 
   .App {
     direction: ltr;
@@ -52,11 +53,13 @@
     .nav-bar {
       z-index: 10000;
       position: fixed;
+      //display: -webkit-box;
       width: 100%;
       bottom: 0;
       left: 0;
       height: 70px;
       border-top: 1px solid #ccc;
+      //border-right: 1px solid #ccc;
       padding: 10px;
       box-sizing: border-box;
       background-color: #fff;

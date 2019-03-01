@@ -42,7 +42,7 @@ function createStyles(container) {
 }
 
 function loadApp() {
-  fetch_text("https://superchat-e7dbf.firebaseapp.com/index.html").then((html) => {
+  fetch_text("/superChat/build/index.html").then((html) => {
     const el = document.createElement('div');
     el.innerHTML = html;
     const scripts = el.getElementsByTagName('script');
