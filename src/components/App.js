@@ -189,18 +189,16 @@ async function updateUser(user) {
 }
 
 async function toggleChannelWindowExpanded(channelId, removeChat) {
-  let updatedChannels;
-
+  const newState = {}
   if (removeChat) {
     await ChannelAPI.removeChannel(channelId);
-    updatedChannels = _.filter(this.state.channels, channel => channel.id !== channelId);
+    newState.channels =  _.filter(this.state.channels, channel => channel.id !== channelId);
+    newState.activeTab = getMainChannel(newState.channels);
   } else {
     const isCollapsed = _.find(this.state.channels, {id: channelId}).isCollapsed;
-    updatedChannels = updateItemInCollection(this.state.channels, {id: channelId, isCollapsed: !isCollapsed })
+    newState.channels = updateItemInCollection(this.state.channels, {id: channelId, isCollapsed: !isCollapsed })
   }
-  this.setState({
-    channels: updatedChannels
-  });
+  this.setState(newState);
 }
 
 class App extends Component {
