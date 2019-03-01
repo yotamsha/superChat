@@ -88,9 +88,25 @@
           font-size: 15px;
           cursor: pointer;
           outline: 0;
-          &.active {
-            background-color: $primary-color;
-            color: #fff;
+          //&.active {
+          //  background-color: $primary-color;
+          //  color: #fff;
+          //}
+          @include media-max($layout-breakpoint-sm) {
+            &.expanded {
+              background-color: $primary-color;
+              color: #fff;
+            }
+          }
+          @include media-min($layout-breakpoint-sm) {
+            &.active {
+              background-color: $primary-color;
+              color: #fff;
+            }
+          }
+
+          &.expanded {
+
           }
           &:hover {
             color: #ffffff;
@@ -173,11 +189,17 @@
       &.channel-tab {
         display: flex;
         flex-direction: column;
+        @include media-max($layout-breakpoint-sm) {
+          display: none;
+        }
 
         &.active {
           .tab-header {
             background-color: $primary-color;
           }
+        }
+        &.expanded {
+          display: flex;
         }
         &.collapsed {
           display: none;

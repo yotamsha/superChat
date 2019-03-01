@@ -94,7 +94,7 @@ class Channel extends Component {
 
   render() {
     return (
-      <div className={`app-tab channel-tab ${this.props.isCollapsed ? 'collapsed' : ''} ${this.props.isActive ? 'active' : ''}`}>
+      <div className={`app-tab channel-tab ${this.props.isCollapsed ? 'collapsed' : ''} ${this.props.isCollapsed === false ? 'expanded' : ''} ${this.props.isActive ? 'active' : ''}`}>
         <div className="tab-header">
           <h3 className="tab-title">{`${this.getTitle()}`}</h3>
           <div className="header-actions-btns">

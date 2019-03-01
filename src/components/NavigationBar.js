@@ -15,7 +15,7 @@ function getUsersStr(users, currentUser) {
 }
 
 function getNavBtnClasses(channel) {
-  return `nav-btn channel ${channel.id === this.props.activeTab ? 'active' : ''}`;
+  return `nav-btn channel ${channel.id === this.props.activeTab ? 'active' : ''} ${channel.isCollapsed === false ? 'expanded' : ''}`;
 }
 
 class NavigationBar extends Component {

@@ -107,13 +107,21 @@ function addMessagesListeners(channels) {
 function switchActiveTab(tabId) {
   if (tabId === 'login') {
     this.setState({
+      channels: updateItemInCollection(this.state.channels, {id: this.state.activeTab, isCollapsed: true}),
       activeTab: tabId
     })
     return;
   }
+  let updatedChannels
+  if (this.state.activeTab !== 'login' && this.state.activeTab !== tabId) {
+    updatedChannels = updateItemInCollection(this.state.channels, {id: this.state.activeTab, isCollapsed: true })
+  } else {
+    updatedChannels = this.state.channels
+  }
+
   this.setState({
     activeTab: tabId,
-    channels: updateItemInCollection(this.state.channels, {id: tabId, isCollapsed: false }),
+    channels: updateItemInCollection(updatedChannels, {id: tabId, isCollapsed: false }),
     unreadChannels: _.assign({}, this.state.unreadChannels, {[tabId]: false})
   })
 
