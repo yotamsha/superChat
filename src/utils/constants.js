@@ -4,5 +4,6 @@ export default {
         LOGGED_IN: 'LOGGED_IN',
         LOGGED_OUT: 'LOGGED_OUT',
         PENDING_LOGIN: 'PENDING_LOGIN'
-    }
+    },
+  MOBILE_WIDTH: 768
 }

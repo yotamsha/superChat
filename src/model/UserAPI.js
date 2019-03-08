@@ -46,7 +46,11 @@ const UserAPI = {
 
   updateUser: user => {
     return store.updateDocument(getTenantId(), collectionId, user);
-  }
+  },
+
+  onUsersChanges(cb) {
+    store.onCollectionChanges(getTenantId(), 'users', [], cb)
+  },
 };
 
 export default UserAPI;

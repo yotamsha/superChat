@@ -9,7 +9,7 @@ import UserAPI from "./../model/UserAPI";
 import sessionProvider from "./../services/sessionProvider";
 import configProvider from './../services/configProvider'
 import constants from './../utils/constants'
-const {AUTH_STATES} = constants;
+const {AUTH_STATES, MOBILE_WIDTH} = constants;
 
 //const config = configProvider.getConfig();
 /**
@@ -92,9 +92,17 @@ function addMessagesListeners(channels) {
   channels.forEach(channel => {
     ChannelAPI.onChannelMessagesChanges(channel.id, messages => {
       messages = _.sortBy(messages, 'createdAt');
-      const updatedChannels = updateItemInCollection(this.state.allChannels, {id: channel.id, messages});
+
+      const currentChannel = this.state.channels.find(c => channel.id === c.id)
+      const updatedChannels = updateItemInCollection(this.state.allChannels, {
+        id: channel.id,
+        messages,
+        isCollapsed: currentChannel && currentChannel.isCollapsed
+      });
       // don't set unread notification on activeTab.
-      const updatedUnreadChannels = (channel.id !== this.state.activeTab) ? _.assign({}, this.state.unreadChannels, {[channel.id]: true}) : this.state.unreadChannels;
+      const updatedUnreadChannels = (channel.id !== this.state.activeTab) ?
+        _.assign({}, this.state.unreadChannels, {[channel.id]: true}) :
+        this.state.unreadChannels;
       this.setState({
         unreadChannels: updatedUnreadChannels,
         allChannels: updatedChannels,
@@ -104,14 +112,49 @@ function addMessagesListeners(channels) {
   })
 }
 
+function listenToUsersChanges() {
+  UserAPI.onUsersChanges(users => {
+    this.setState({
+      activeUsers: users
+    });
+  })
+}
+
+function isMobileDevice() {
+  const width = window.innerWidth
+  || document.documentElement.clientWidth
+  || document.body.clientWidth;
+
+  return width <= MOBILE_WIDTH
+}
+
 function switchActiveTab(tabId) {
+  if (tabId === 'usersList') {
+    this.setState({
+      openTabs: {
+        usersList : !this.state.openTabs.usersList
+      }
+    })
+    return;
+  }
+  if (isMobileDevice()) {
+    this.setState({
+      openTabs: {
+        usersList : false
+      }
+    })
+  }
   if (tabId === 'login') {
+    if (this.state.activeTab === 'login') {
+      return
+    }
     this.setState({
       channels: updateItemInCollection(this.state.channels, {id: this.state.activeTab, isCollapsed: true}),
       activeTab: tabId
     })
     return;
   }
+
   let updatedChannels
   if (this.state.activeTab !== 'login' && this.state.activeTab !== tabId) {
     updatedChannels = updateItemInCollection(this.state.channels, {id: this.state.activeTab, isCollapsed: true })
@@ -211,6 +254,10 @@ class App extends Component {
     this.state = {
       unreadChannels: {},
       activeTab: '',
+      openTabs: {
+        usersList: false
+      },
+      activeUsers: [],
       authState: AUTH_STATES.PRE_INIT,
       channels: [],
       appId: configProvider.getConfig().appId,
@@ -222,6 +269,7 @@ class App extends Component {
       // listen to any changes in the channels list
       ChannelAPI.onPublicChannelsChanges(channelsDataRetrieved.bind(this));
       WidgetAPI.onWidgetChanges(widgetDataChanged.bind(this));
+      listenToUsersChanges.call(this);
     }
 
     resetListeners()
@@ -251,6 +299,8 @@ class App extends Component {
         <Chat user={this.state.currentUser}
               title = {this.state.uiProps.title}
               channels={this.state.channels}
+              activeUsers={this.state.activeUsers}
+              openTabs={this.state.openTabs}
               authState={this.state.authState}
               unreadChannels={this.state.unreadChannels}
               activeTab={this.state.activeTab}

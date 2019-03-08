@@ -6,6 +6,7 @@ import NavigationBar from './NavigationBar';
 import UserProfile from './UserProfile';
 import ChannelAPI from './../model/ChannelAPI';
 import appPropTypes from './appPropTypes';
+import UsersTab from "./UsersTab";
 
 const {channelType, userType} = appPropTypes;
 
@@ -19,6 +20,8 @@ class Chat extends Component {
   static propTypes = {
     channels: PropTypes.arrayOf(channelType),
     activeTab: PropTypes.string,
+    openTabs: PropTypes.object,
+    activeUsers: PropTypes.array,
     unreadChannels: PropTypes.object,
     user: userType,
     title: PropTypes.string,
@@ -33,9 +36,19 @@ class Chat extends Component {
     channels: []
   };
 
+  isChannelWithSameUsersExists(userIds) {
+    return this.props.channels.find(channel => {
+      return _.difference(userIds, _.map(channel.members, 'id')).length === 0
+    })
+  }
+
   async openNewChannel(users) {
     if (this.props.user.id) {
-      // todo Only allow to open a single channel with a user.
+      const channelWithSameUsers = this.isChannelWithSameUsersExists(users)
+      if (channelWithSameUsers) {
+        this.props.switchActiveTab(channelWithSameUsers.id)
+        return
+      }
       const newChannel = await ChannelAPI.createChannel(users);
       this.props.switchActiveTab(newChannel.id)
     } else {
@@ -65,27 +78,38 @@ class Chat extends Component {
 
     return (
       <div className="chat">
-        {channel && (
-          <Channel
-            key={channel.id}
-            id={channel.id}
-            currentUser={this.props.user}
-            onFocus={this.props.switchActiveTab}
-            name={this.props.title || channel.title}
-            isPublic={channel.isPublic}
-            messages={channel.messages}
-            isCollapsed={channel.isCollapsed}
-            members={channel.members}
-            openNewChannel={this.openNewChannel.bind(this)}
-            onInputFocus={this.promptUserDetailsDialogIfNeeded.bind(this)}
-            onSubmitMessage={this.submitMessage.bind(this)}
-            toggleChannelWindowExpanded={this.props.toggleChannelWindowExpanded} />)}
+        <div className="app-tabs">
+          {channel && (
+            <Channel
+              key={channel.id}
+              id={channel.id}
+              currentUser={this.props.user}
+              onFocus={this.props.switchActiveTab}
+              name={this.props.title || channel.title}
+              isPublic={channel.isPublic}
+              messages={channel.messages}
+              isCollapsed={channel.isCollapsed}
+              members={channel.members}
+              openNewChannel={this.openNewChannel.bind(this)}
+              onInputFocus={this.promptUserDetailsDialogIfNeeded.bind(this)}
+              onSubmitMessage={this.submitMessage.bind(this)}
+              toggleChannelWindowExpanded={this.props.toggleChannelWindowExpanded} />)}
 
-        {this.props.activeTab === 'login' &&
-          <UserProfile user={this.props.user} updateUser={this.props.updateUser} loginUser={this.props.loginUser}></UserProfile>
-        }
+          {
+            this.props.activeTab === 'login' &&
+            <UserProfile user={this.props.user} updateUser={this.props.updateUser} loginUser={this.props.loginUser}></UserProfile>
+          }
+            <UsersTab currentUser={this.props.user}
+                      isOpen={!!this.props.openTabs.usersList}
+                      openNewChannel={this.openNewChannel.bind(this)}
+                      activeUsers={this.props.activeUsers}>
+            </UsersTab>
+
+
+        </div>
 
         <NavigationBar
+          openTabs={this.props.openTabs}
           title={this.props.title}
           unreadChannels={this.props.unreadChannels}
           currentUser={this.props.user}

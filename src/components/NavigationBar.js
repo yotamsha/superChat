@@ -25,7 +25,8 @@ class NavigationBar extends Component {
     channels: PropTypes.arrayOf(channelType),
     onTabSelected: PropTypes.func.isRequired,
     activeTab: PropTypes.string,
-    title: PropTypes.string
+    title: PropTypes.string,
+    openTabs: PropTypes.object
   }
 
   render() {
@@ -36,6 +37,11 @@ class NavigationBar extends Component {
             <button onClick={() => this.props.onTabSelected('login')}
                     className={`nav-btn channels ${this.props.activeTab === 'login' ? 'active' : ''}`}>
               <FontAwesome name='cogs' />
+
+            </button>
+            <button onClick={() => this.props.onTabSelected('usersList')}
+                    className={`nav-btn channels ${this.props.openTabs.usersList ? 'active' : ''}`}>
+              <FontAwesome name='group' />
 
             </button>
           </div>

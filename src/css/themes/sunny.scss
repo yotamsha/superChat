@@ -1,7 +1,7 @@
 @import "../mixins.scss";
 .App {
   &.sunny{
-    $primary-color: #d8c225;
+    $primary-color: #d8ac0a;
     $primary-light: #f6f4c7;
 
     @include theme($primary-color, $primary-light);

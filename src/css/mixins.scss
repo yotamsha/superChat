@@ -1,6 +1,6 @@
 @mixin theme($primary-color, $primary-light) {
   .chat {
-    font-family: Arial;
+    //font-family: 'quicksand', sans-serif, Arial;
     .app-tab {
       .tab-header {
         background-color: $primary-color;
@@ -35,6 +35,9 @@
         button {
           background-color: $primary-color;
         }
+      }
+      &.users-list-tab {
+        background-color: $primary-color;
       }
     }
 

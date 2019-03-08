@@ -13,6 +13,8 @@
     "react-dom": "^16.5.0",
     "react-fontawesome": "^1.6.1",
     "react-scripts": "1.1.5",
+    "typeface-poppins": "^0.0.72",
+    "typeface-quicksand": "^0.0.71",
     "typeface-roboto": "0.0.54"
   },
   "scripts": {
