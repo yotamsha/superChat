@@ -193,7 +193,7 @@ async function listenToUserChanges() {
       // if we are in a pending login state
       if (this.state.authState === AUTH_STATES.PENDING_LOGIN) {
         // create or update the user in the collection.
-        const newUser = _.assign({}, this.state.currentUser, {id: user.uid}, this.newUserDetails);
+        const newUser = _.assign({}, this.state.currentUser, {id: user.uid, createdAt: new Date().getTime()}, this.newUserDetails);
         await UserAPI.createUser(newUser);
         sessionProvider.set(configProvider.getConfig().appId, JSON.stringify({user: newUser}));
         this.setState({
@@ -225,7 +225,7 @@ async function loginUser(userDetails) {
 }
 
 async function updateUser(user) {
-  const updatedUser = await UserAPI.updateUser(user)
+  const updatedUser = await UserAPI.updateUser(_.assign({}, user, {updatedAt: new Date().getTime()}))
   sessionProvider.set(configProvider.getConfig().appId, JSON.stringify({user: updatedUser}));
   const mainChannel = getMainChannel(this.state.channels)
   this.setState({
