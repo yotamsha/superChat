@@ -193,7 +193,7 @@ async function listenToUserChanges() {
       // if we are in a pending login state
       if (this.state.authState === AUTH_STATES.PENDING_LOGIN) {
         // create or update the user in the collection.
-        const newUser = _.assign({}, this.state.currentUser, {id: user.uid, createdAt: new Date().getTime()}, this.newUserDetails);
+        const newUser = _.assign({}, this.state.currentUser, {id: user.uid, createdAt: new Date().getTime(), lastVisit: new Date().getTime()}, this.newUserDetails);
         await UserAPI.createUser(newUser);
         sessionProvider.set(configProvider.getConfig().appId, JSON.stringify({user: newUser}));
         this.setState({
@@ -251,17 +251,18 @@ async function toggleChannelWindowExpanded(channelId, removeChat) {
 class App extends Component {
   constructor() {
     super();
+    console.log()
     this.state = {
       unreadChannels: {},
       activeTab: '',
       openTabs: {
-        usersList: false
+        usersList: !isMobileDevice()
       },
       activeUsers: [],
       authState: AUTH_STATES.PRE_INIT,
       channels: [],
       appId: configProvider.getConfig().appId,
-      uiProps: configProvider.getConfig().uiProps || {},
+      // uiProps: configProvider.getConfig().uiProps || {},
       currentUser: UserAPI.getDefaultUser()
     };
     const resetListeners = () => {
@@ -294,7 +295,7 @@ class App extends Component {
   }
   
   render() {
-    return (
+    return this.state.uiProps ? (
       <div dir="ltr" className={`App ${this.state.uiProps.theme || ''} ${this.state.uiProps.layout || ''}`}>
         <Chat user={this.state.currentUser}
               title = {this.state.uiProps.title}
@@ -310,7 +311,7 @@ class App extends Component {
               updateUser={updateUser.bind(this)}>
         </Chat>
       </div>
-    );
+    ) : (<div></div>);
   }
 }
 

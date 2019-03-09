@@ -14,6 +14,9 @@ class UserProfile extends Component {
   }
 
   submitClicked (user) {
+    if (!user.username.length) {
+      return;
+    }
     if (this.props.user.id) {
       this.props.updateUser(_.defaults(user, this.props.user));
     } else {

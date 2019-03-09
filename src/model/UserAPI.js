@@ -17,7 +17,7 @@ const UserAPI = {
   onAuthStateChanged: (cb) => {
     // TODO add user to users collection if it doesn't exist.
     store.onAuthStateChanged(storedUser => {
-      if (storedUser.uid) {
+      if (storedUser && storedUser.uid) {
         UserAPI.updateUser({id: storedUser.uid, lastVisit: new Date().getTime()})
       }
       cb(storedUser)
@@ -55,10 +55,8 @@ const UserAPI = {
     const DAYS_SINCE_ACTIVE = 3;
     const dateOffset = (24*60*60*1000) * DAYS_SINCE_ACTIVE; //3 days
     const d = new Date();
-    console.log(d.getTime())
-
     d.setTime(d.getTime() - dateOffset);
-    console.log(d.getTime())
+
     const filters = [{
       field: 'lastVisit',
       condition: '>=',
