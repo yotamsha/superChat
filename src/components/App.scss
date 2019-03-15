@@ -47,6 +47,10 @@
     :-moz-placeholder { /* Firefox 18- */
       color: #b1b1b1;
     }
+
+    .flex-cont {
+      display: flex;
+    }
   }
 
   .chat {
@@ -296,6 +300,12 @@
               z-index: 9999;
               align-self: flex-end;
 
+              .input-cont {
+                flex: 1;
+              }
+              .buttons-cont {
+                width: 85px;
+              }
               input {
                 height: 43px;
                 width: 295px;
@@ -439,6 +449,7 @@
             font-weight: bold;
             color: #ffffff;
             padding: 15px;
+            font-size: 15px;
             .list-title {
 
             }

@@ -130,18 +130,24 @@ class Channel extends Component {
             </div>
           </div>
           <div className="message-input">
-            <input defaultValue={this.currentMessage} placeholder="Type your message"
-                   ref={(ref) => this.messageInputRef= ref}
-                   onKeyPress={(e) => {
-                     if (e.key === 'Enter') {
-                       this.submitMessage(this.currentMessage, this.props.id)
-                     }
-                   }}
-                   onChange={(event) => this.currentMessage = event.target.value}></input>
-            <button className="emojis-btn" onClick={this.openCloseEmojisList.bind(this)}><FontAwesome name='smile-o'/></button>
-            <button type="submit" onClick={() => this.submitMessage(this.currentMessage, this.props.id)}>
-              <FontAwesome name='send' />
-            </button>
+            <div className="flex-cont">
+              <div className="input-cont">
+                <input defaultValue={this.currentMessage} placeholder="Type your message"
+                       ref={(ref) => this.messageInputRef= ref}
+                       onKeyPress={(e) => {
+                         if (e.key === 'Enter') {
+                           this.submitMessage(this.currentMessage, this.props.id)
+                         }
+                       }}
+                       onChange={(event) => this.currentMessage = event.target.value}></input>
+              </div>
+              <div className="buttons-cont">
+                <button className="emojis-btn" onClick={this.openCloseEmojisList.bind(this)}><FontAwesome name='smile-o'/></button>
+                <button type="submit" onClick={() => this.submitMessage(this.currentMessage, this.props.id)}>
+                  <FontAwesome name='send' />
+                </button>
+              </div>
+            </div>
           </div>
 
         </div>
