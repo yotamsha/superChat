@@ -123,6 +123,13 @@ class Channel extends Component {
                 </div>
               </li>
             })}
+            <li className="chatters-ad">
+              <span>Created by
+              </span>
+              <a href="https://chatters.live">
+                <img className="logo" src={process.env.PUBLIC_URL + '/images/logo-white.png'} alt=''></img>
+              </a>
+            </li>
           </ul>
           <div className={'emojis-list ' + (this.state.emojisListOpen ? 'open' : '')}>
             <div className="list-container">

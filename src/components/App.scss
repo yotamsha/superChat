@@ -289,6 +289,20 @@
                   color: $primary-color;
                 }
               }
+              .chatters-ad {
+                padding: 6px 0px;
+                a {
+                  cursor: pointer;
+                }
+                span {
+                  font-size: 13px;
+                }
+                img {
+                  padding-left: 4px;
+                  margin-bottom: -3px;
+                  height: 15px;
+                }
+              }
             }
             .message-input {
               flex: 1;
