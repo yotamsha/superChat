@@ -115,7 +115,7 @@ function addMessagesListeners(channels) {
 function listenToUsersChanges() {
   UserAPI.onUsersChanges(users => {
     this.setState({
-      activeUsers: users
+      activeUsers: users.filter(user => !user.banned )
     });
   })
 }
