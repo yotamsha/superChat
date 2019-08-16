@@ -483,6 +483,8 @@
                 vertical-align: middle;
                 &.me {
                   cursor: initial;
+                  font-style: italic;
+                  font-weight: normal; 
                 }
               }
             }

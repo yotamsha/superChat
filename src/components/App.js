@@ -77,7 +77,7 @@ function widgetDataChanged(data) {
   if (data.widgetProps) {
     console.log(data.widgetProps)
     this.setState({
-      uiProps: Object.assign({}, JSON.parse(data.widgetProps), {theme: 'default'})
+      uiProps: JSON.parse(data.widgetProps)
     })
   } else {
     this.setState({
