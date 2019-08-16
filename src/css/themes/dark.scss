@@ -3,7 +3,8 @@
   &.dark{
     $primary-color:#000000;
     $primary-light: #d6d6d6;
+    $primary-very-light: #fbfbfb;
 
-    @include theme($primary-color, $primary-light);
+    @include theme($primary-color, $primary-light, $primary-very-light);
   }
 }

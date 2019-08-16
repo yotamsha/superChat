@@ -40,7 +40,7 @@ class NavigationBar extends Component {
 
             </button>
             <button onClick={() => this.props.onTabSelected('usersList')}
-                    className={`nav-btn channels ${this.props.openTabs.usersList ? 'active' : ''}`}>
+                    className={`nav-btn users-list-btn channels ${this.props.openTabs.usersList ? 'active' : ''}`}>
               <FontAwesome name='group' />
 
             </button>

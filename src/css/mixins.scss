@@ -1,4 +1,6 @@
-@mixin theme($primary-color, $primary-light) {
+@import "./layouts/relative.scss";
+
+@mixin theme($primary-color, $primary-light, $primary-very-light) {
   .chat {
     //font-family: 'quicksand', sans-serif, Arial;
     .app-tab {
@@ -62,4 +64,5 @@
       }
     }
   }
+  @include relative($primary-color, $primary-light, $primary-very-light);
 }

@@ -3,7 +3,8 @@
   &.nature {
     $primary-color: #2d964c;
     $primary-light: #7dbc88;
+    $primary-very-light: #f4fbf5;
 
-    @include theme($primary-color, $primary-light);
+    @include theme($primary-color, $primary-light, $primary-very-light);
   }
 }

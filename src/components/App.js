@@ -75,8 +75,9 @@ function channelsDataRetrieved(updatedData) {
 
 function widgetDataChanged(data) {
   if (data.widgetProps) {
+    console.log(data.widgetProps)
     this.setState({
-      uiProps: JSON.parse(data.widgetProps)
+      uiProps: Object.assign({}, JSON.parse(data.widgetProps), {theme: 'default'})
     })
   } else {
     this.setState({

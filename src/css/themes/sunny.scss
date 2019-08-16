@@ -3,7 +3,9 @@
   &.sunny{
     $primary-color: #d8ac0a;
     $primary-light: #f6f4c7;
+    $primary-very-light: #fffff5;
 
-    @include theme($primary-color, $primary-light);
+    @include theme($primary-color, $primary-light, $primary-very-light);
+
   }
 }

@@ -1,70 +1,101 @@
 @import "../variables.scss";
-.App {
-  &.relative {
-    .chat {
+@mixin relative($primary-color, $primary-light, $primary-very-light) {
+    &.relative {
       max-width: 900px;
-
-      .nav-bar {
-        width: 100%;
-        max-width: 900px;
-        position: relative;
-        clear: both;
-      }
-      .app-tabs {
-        position: relative;
-        bottom: 0;
-        float: left;
-        width: 100%;
-
-
-        .app-tab {
-          height: 500px;
-          width: 75%;
-          max-width: 800px;
+      border: 1px solid $primary-color;
+      border-radius: 10px;
+      .chat {
+        .nav-bar {
+          width: 100%;
           position: relative;
-          float: right;
-          bottom:0;
-          @include media-max($layout-breakpoint-sm) {
-            width: 100%;
+          clear: both;
+          overflow: hidden;
+          border-radius: 10px;
+          border-style: none;
+          .users-list-btn {
+            display: none;
           }
-          &.channel-tab {
-            .tab-messages .message-input input {
+        }
+        .app-tabs {
+          position: relative;
+          bottom: 0;
+          float: left;
+          width: 100%;
+  
+          .app-tab {
+            height: 500px;
+            width: 75%;
+            position: relative;
+            float: right;
+            bottom:0;
+            -webkit-box-shadow: inset 0px 0px 0px 0px;
+            box-shadow: inset 0px 0px 0px 0px;
+            @include media-max($layout-breakpoint-sm) {
               width: 100%;
             }
-
-            .tab-header {
-              .header-actions-btns {
+            &.channel-tab {
+              .tab-messages {
+                background-color: $primary-very-light;
+              }
+              .tab-messages .message-input input {
+                width: 100%;
+              }
+  
+              .tab-header {
+                background-color: #fff;
+                border-bottom: 1px solid #d9d9d940;
+                .tab-title {
+                  color: $primary-color;
+                  font-weight: bold;
+                }
+                .header-actions-btns {
+                  display: none;
+                }
+              }
+              .buttons-cont {
+                padding-left: 25px;
+                padding-top: 4px;
+              }
+  
+              @include media-max($layout-breakpoint-sm) {
+                display: block;
+                .tab-messages .message-input {
+                  padding-bottom: 60px;
+                }
+              }
+            }
+            &.user-tab {
+              .tab-header {
+                background-color: $primary-light;
+                border-bottom: 1px solid $primary-color;
+                .tab-title {
+                  color: $primary-color;
+                  font-weight: bold;
+                }
+                .header-actions-btns {
+                  display: none;
+                }
+              }
+              .user-img {
+                height: 200px;
+                width: 200px;
+              }
+              #username {
+                width: 74%;
+              }
+            }
+            &.users-list-tab {
+              width: 25%;
+              border-radius: 9px 0px 0px 0px;
+              .tab-header { 
                 display: none;
               }
-            }
-            .buttons-cont {
-              padding-left: 25px;
-            }
-
-            @include media-max($layout-breakpoint-sm) {
-              display: block;
-              .tab-messages .message-input {
-                padding-bottom: 60px;
+              @include media-max($layout-breakpoint-sm) {
+                width: 0%;
               }
-            }
-          }
-          &.user-tab {
-            .user-img {
-              height: 200px;
-              width: 200px;
-            }
-            #username {
-              width: 74%;
-            }
-          }
-          &.users-list-tab {
-            width: 25%;
-            @include media-max($layout-breakpoint-sm) {
-              width: 0%;
             }
           }
         }
       }
     }
   }
-}

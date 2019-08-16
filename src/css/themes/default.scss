@@ -3,7 +3,8 @@
   &.default {
     $primary-color: #3F51B5;
     $primary-light: #d6d9f3;
+    $primary-very-light: #f9f9ff;
 
-    @include theme($primary-color, $primary-light);
+    @include theme($primary-color, $primary-light, $primary-very-light);
   }
 }

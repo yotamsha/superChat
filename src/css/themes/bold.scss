@@ -3,7 +3,7 @@
   &.bold {
     $primary-color: #911806;
     $primary-light: #d6adb6;
-
-    @include theme($primary-color, $primary-light);
+    $primary-very-light: #fff5f5;
+    @include theme($primary-color, $primary-light, $primary-very-light);
   }
 }
