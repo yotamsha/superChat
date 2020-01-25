@@ -4,6 +4,7 @@
       max-width: 900px;
       border: 1px solid $primary-color;
       border-radius: 10px;
+      overflow: hidden;
       .chat {
         .nav-bar {
           width: 100%;
@@ -82,6 +83,9 @@
               }
               #username {
                 width: 74%;
+                @include media-max($layout-breakpoint-sm) {
+                  width: 60%;
+                }
               }
             }
             &.users-list-tab {

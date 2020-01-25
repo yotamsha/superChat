@@ -1,21 +1,27 @@
-import React, {Component} from 'react';
-import _ from 'lodash';
-import PropTypes from 'prop-types';
-import appPropTypes from './appPropTypes';
-import FontAwesome from 'react-fontawesome';
+import React, { Component } from "react";
+import _ from "lodash";
+import PropTypes from "prop-types";
+import appPropTypes from "./appPropTypes";
+import FontAwesome from "react-fontawesome";
 
-const {channelType, userType} = appPropTypes;
+const { channelType, userType } = appPropTypes;
 
 function getUsersStr(users, currentUser) {
   const otherUsers = _.filter(users, user => user.id !== currentUser.id);
-  return _.reduce(otherUsers, (str, user) => {
-    str += user.username + ", "
-    return str;
-  }, '').slice(0, -2)
+  return _.reduce(
+    otherUsers,
+    (str, user) => {
+      str += user.username + ", ";
+      return str;
+    },
+    ""
+  ).slice(0, -2);
 }
 
 function getNavBtnClasses(channel) {
-  return `nav-btn channel ${channel.id === this.props.activeTab ? 'active' : ''} ${channel.isCollapsed === false ? 'expanded' : ''}`;
+  return `nav-btn channel ${
+    channel.id === this.props.activeTab ? "active" : ""
+  } ${channel.isCollapsed === false ? "expanded" : ""}`;
 }
 
 class NavigationBar extends Component {
@@ -27,22 +33,28 @@ class NavigationBar extends Component {
     activeTab: PropTypes.string,
     title: PropTypes.string,
     openTabs: PropTypes.object
-  }
+  };
 
   render() {
     return (
       <div className="nav-bar">
         <div className="pinned-tabs-container">
           <div className="nav-btn-container">
-            <button onClick={() => this.props.onTabSelected('login')}
-                    className={`nav-btn channels ${this.props.activeTab === 'login' ? 'active' : ''}`}>
-              <FontAwesome name='cogs' />
-
+            <button
+              onClick={() => this.props.onTabSelected("login")}
+              className={`nav-btn channels ${
+                this.props.activeTab === "login" ? "active" : ""
+              }`}
+            >
+              <FontAwesome name="cogs" />
             </button>
-            <button onClick={() => this.props.onTabSelected('usersList')}
-                    className={`nav-btn users-list-btn channels ${this.props.openTabs.usersList ? 'active' : ''}`}>
-              <FontAwesome name='group' />
-
+            <button
+              onClick={() => this.props.onTabSelected("usersList")}
+              className={`nav-btn users-list-btn channels ${
+                this.props.openTabs.usersList ? "active" : ""
+              }`}
+            >
+              <FontAwesome name="group" />
             </button>
           </div>
         </div>
@@ -50,12 +62,15 @@ class NavigationBar extends Component {
           {_.map(this.props.channels, channel => (
             <div key={channel.id} className="nav-btn-container">
               <button
-                      className={getNavBtnClasses.call(this, channel)}
-                      onClick={() => this.props.onTabSelected(channel.id)}>
-                <span className="hashtag">{channel.isPublic ? '# ' : ''}</span>
-                {(channel.isPublic && this.props.title) || channel.title || getUsersStr(channel.members, this.props.currentUser)}
+                className={getNavBtnClasses.call(this, channel)}
+                onClick={() => this.props.onTabSelected(channel.id)}
+              >
+                <span className="hashtag">{channel.isPublic ? "# " : ""}</span>
+                {(channel.isPublic && this.props.title) ||
+                  channel.title ||
+                  getUsersStr(channel.members, this.props.currentUser)}
               </button>
-              {this.props.unreadChannels[channel.id] && <div className="unread-indicator"></div>}
+              {/* {this.props.unreadChannels[channel.id] && <div className="unread-indicator"></div>} */}
             </div>
           ))}
         </div>

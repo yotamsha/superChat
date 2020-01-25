@@ -1,15 +1,15 @@
-import _ from 'lodash';
-import React, {Component} from 'react';
-import Chat from './Chat';
-import './App.css';
-import ReportAPI from './../model/ReportAPI'
-import ChannelAPI from './../model/ChannelAPI'
-import WidgetAPI from './../model/WidgetAPI'
+import _ from "lodash";
+import React, { Component } from "react";
+import Chat from "./Chat";
+import "./App.css";
+import ReportAPI from "./../model/ReportAPI";
+import ChannelAPI from "./../model/ChannelAPI";
+import WidgetAPI from "./../model/WidgetAPI";
 import UserAPI from "./../model/UserAPI";
 import sessionProvider from "./../services/sessionProvider";
-import configProvider from './../services/configProvider'
-import constants from './../utils/constants'
-const {AUTH_STATES, MOBILE_WIDTH} = constants;
+import configProvider from "./../services/configProvider";
+import constants from "./../utils/constants";
+const { AUTH_STATES, MOBILE_WIDTH } = constants;
 
 //const config = configProvider.getConfig();
 /**
@@ -23,10 +23,14 @@ const {AUTH_STATES, MOBILE_WIDTH} = constants;
  * Maybe I can solve it by generating my own tokens and signIn with these custom tokens.
  */
 function updateItemInCollection(collection, updatedItem) {
-  const updatedCollection = _.cloneDeep(collection)
-  const index = _.findIndex(updatedCollection, {id: updatedItem.id});
+  const updatedCollection = _.cloneDeep(collection);
+  const index = _.findIndex(updatedCollection, { id: updatedItem.id });
   if (index >= 0) {
-    updatedCollection[index] = _.assign({}, updatedCollection[index], updatedItem);
+    updatedCollection[index] = _.assign(
+      {},
+      updatedCollection[index],
+      updatedItem
+    );
   } else {
     updatedCollection.push(updatedItem);
     //console.warn('tried to updated item with non-existing id: ' + updatedItem.id)
@@ -39,51 +43,62 @@ function updateItemInCollection(collection, updatedItem) {
  * @param updatedCollection
  */
 function mergeCollectionChanges(collection, updatedCollection) {
-  return _.reduce(updatedCollection, (acc, updatedItem) => {
-    acc = updateItemInCollection(acc, updatedItem);
-    return acc;
-  }, collection)
-
+  return _.reduce(
+    updatedCollection,
+    (acc, updatedItem) => {
+      acc = updateItemInCollection(acc, updatedItem);
+      return acc;
+    },
+    collection
+  );
 }
 
 function getRelevantChannels(allChannels) {
   const MAX_PRIVATE_CHATS = 10;
   const MAX_PUBLIC_CHATS = 1;
-  const publicChannels = _(allChannels).filter('isPublic').takeRight(MAX_PUBLIC_CHATS).value();
-  const privateChannels = _(allChannels).reject('isPublic').sortBy('createdAt').reverse().takeRight(MAX_PRIVATE_CHATS).value();
+  const publicChannels = _(allChannels)
+    .filter("isPublic")
+    .takeRight(MAX_PUBLIC_CHATS)
+    .value();
+  const privateChannels = _(allChannels)
+    .reject("isPublic")
+    .sortBy("createdAt")
+    .reverse()
+    .takeRight(MAX_PRIVATE_CHATS)
+    .value();
   return _.concat(publicChannels, privateChannels);
-
 }
 
 function getMainChannel(channels) {
   return channels.length && channels[0].id;
-
 }
 
 function channelsDataRetrieved(updatedData) {
-  const updatedChannels = mergeCollectionChanges(this.state.channels, updatedData);
+  const updatedChannels = mergeCollectionChanges(
+    this.state.channels,
+    updatedData
+  );
   addMessagesListeners.call(this, updatedChannels);
   const newState = {
     allChannels: updatedChannels,
     channels: getRelevantChannels(updatedChannels)
   };
   if (!this.state.activeTab) {
-    newState.activeTab = getMainChannel(newState.channels)
+    newState.activeTab = getMainChannel(newState.channels);
   }
   this.setState(newState);
 }
 
 function widgetDataChanged(data) {
   if (data.widgetProps) {
-    console.log(data.widgetProps)
+    console.log(data.widgetProps);
     this.setState({
       uiProps: JSON.parse(data.widgetProps)
-    })
+    });
   } else {
     this.setState({
       uiProps: configProvider.getConfig().uiProps || {}
-    })
-
+    });
   }
 }
 
@@ -92,83 +107,94 @@ function addMessagesListeners(channels) {
   // listen to changes to any messages on the open channels
   channels.forEach(channel => {
     ChannelAPI.onChannelMessagesChanges(channel.id, messages => {
-      messages = _.sortBy(messages, 'createdAt');
+      console.log(messages);
+      messages = _.sortBy(messages, "createdAt");
 
-      const currentChannel = this.state.channels.find(c => channel.id === c.id)
+      const currentChannel = this.state.channels.find(c => channel.id === c.id);
       const updatedChannels = updateItemInCollection(this.state.allChannels, {
         id: channel.id,
         messages,
         isCollapsed: currentChannel && currentChannel.isCollapsed
       });
       // don't set unread notification on activeTab.
-      const updatedUnreadChannels = (channel.id !== this.state.activeTab) ?
-        _.assign({}, this.state.unreadChannels, {[channel.id]: true}) :
-        this.state.unreadChannels;
+      const updatedUnreadChannels =
+        channel.id !== this.state.activeTab
+          ? _.assign({}, this.state.unreadChannels, { [channel.id]: true })
+          : this.state.unreadChannels;
       this.setState({
         unreadChannels: updatedUnreadChannels,
         allChannels: updatedChannels,
         channels: getRelevantChannels(updatedChannels)
       });
-    })
-  })
+    });
+  });
 }
 
 function listenToUsersChanges() {
   UserAPI.onUsersChanges(users => {
     this.setState({
-      activeUsers: users.filter(user => !user.banned )
+      activeUsers: users.filter(user => !user.banned)
     });
-  })
+  });
 }
 
 function isMobileDevice() {
-  const width = window.innerWidth
-  || document.documentElement.clientWidth
-  || document.body.clientWidth;
+  const width =
+    window.innerWidth ||
+    document.documentElement.clientWidth ||
+    document.body.clientWidth;
 
-  return width <= MOBILE_WIDTH
+  return width <= MOBILE_WIDTH;
 }
 
 function switchActiveTab(tabId) {
-  if (tabId === 'usersList') {
+  if (tabId === "usersList") {
     this.setState({
       openTabs: {
-        usersList : !this.state.openTabs.usersList
+        usersList: !this.state.openTabs.usersList
       }
-    })
+    });
     return;
   }
   if (isMobileDevice()) {
     this.setState({
       openTabs: {
-        usersList : false
+        usersList: false
       }
-    })
+    });
   }
-  if (tabId === 'login') {
-    if (this.state.activeTab === 'login') {
-      return
+  if (tabId === "login") {
+    if (this.state.activeTab === "login") {
+      return;
     }
     this.setState({
-      channels: updateItemInCollection(this.state.channels, {id: this.state.activeTab, isCollapsed: true}),
+      channels: updateItemInCollection(this.state.channels, {
+        id: this.state.activeTab,
+        isCollapsed: true
+      }),
       activeTab: tabId
-    })
+    });
     return;
   }
 
-  let updatedChannels
-  if (this.state.activeTab !== 'login' && this.state.activeTab !== tabId) {
-    updatedChannels = updateItemInCollection(this.state.channels, {id: this.state.activeTab, isCollapsed: true })
+  let updatedChannels;
+  if (this.state.activeTab !== "login" && this.state.activeTab !== tabId) {
+    updatedChannels = updateItemInCollection(this.state.channels, {
+      id: this.state.activeTab,
+      isCollapsed: true
+    });
   } else {
-    updatedChannels = this.state.channels
+    updatedChannels = this.state.channels;
   }
 
   this.setState({
     activeTab: tabId,
-    channels: updateItemInCollection(updatedChannels, {id: tabId, isCollapsed: false }),
-    unreadChannels: _.assign({}, this.state.unreadChannels, {[tabId]: false})
-  })
-
+    channels: updateItemInCollection(updatedChannels, {
+      id: tabId,
+      isCollapsed: false
+    }),
+    unreadChannels: _.assign({}, this.state.unreadChannels, { [tabId]: false })
+  });
 }
 
 async function listenToUserChanges() {
@@ -181,9 +207,14 @@ async function listenToUserChanges() {
         if (isValidSession) {
           this.setState({
             authState: AUTH_STATES.LOGGED_IN,
-            currentUser: _.assign({}, UserAPI.getCurrentUser(), {id: user.uid})
+            currentUser: _.assign({}, UserAPI.getCurrentUser(), {
+              id: user.uid
+            })
           });
-          ChannelAPI.onPrivateChannelsChanges(user.uid, channelsDataRetrieved.bind(this))
+          ChannelAPI.onPrivateChannelsChanges(
+            user.uid,
+            channelsDataRetrieved.bind(this)
+          );
         } else {
           this.setState({
             authState: AUTH_STATES.LOGGED_OUT
@@ -194,14 +225,29 @@ async function listenToUserChanges() {
       // if we are in a pending login state
       if (this.state.authState === AUTH_STATES.PENDING_LOGIN) {
         // create or update the user in the collection.
-        const newUser = _.assign({}, this.state.currentUser, {id: user.uid, createdAt: new Date().getTime(), lastVisit: new Date().getTime()}, this.newUserDetails);
+        const newUser = _.assign(
+          {},
+          this.state.currentUser,
+          {
+            id: user.uid,
+            createdAt: new Date().getTime(),
+            lastVisit: new Date().getTime()
+          },
+          this.newUserDetails
+        );
         await UserAPI.createUser(newUser);
-        sessionProvider.set(configProvider.getConfig().appId, JSON.stringify({user: newUser}));
+        sessionProvider.set(
+          configProvider.getConfig().appId,
+          JSON.stringify({ user: newUser })
+        );
         this.setState({
           currentUser: newUser,
           authState: AUTH_STATES.LOGGED_IN
-        })
-        ChannelAPI.onPrivateChannelsChanges(this.state.currentUser.id, channelsDataRetrieved.bind(this))
+        });
+        ChannelAPI.onPrivateChannelsChanges(
+          this.state.currentUser.id,
+          channelsDataRetrieved.bind(this)
+        );
         return;
       }
     } else {
@@ -209,7 +255,7 @@ async function listenToUserChanges() {
         authState: AUTH_STATES.LOGGED_OUT
       });
     }
-  })
+  });
 }
 
 async function loginUser(userDetails) {
@@ -217,34 +263,52 @@ async function loginUser(userDetails) {
   const mainChannel = getMainChannel(this.state.channels);
 
   this.setState({
-    channels: updateItemInCollection(this.state.channels, {id: mainChannel, isCollapsed: false }),
+    channels: updateItemInCollection(this.state.channels, {
+      id: mainChannel,
+      isCollapsed: false
+    }),
     activeTab: mainChannel,
     authState: AUTH_STATES.PENDING_LOGIN
   });
 
-  return await UserAPI.login()
+  return await UserAPI.login();
 }
 
 async function updateUser(user) {
-  const updatedUser = await UserAPI.updateUser(_.assign({}, user, {updatedAt: new Date().getTime()}))
-  sessionProvider.set(configProvider.getConfig().appId, JSON.stringify({user: updatedUser}));
-  const mainChannel = getMainChannel(this.state.channels)
+  const updatedUser = await UserAPI.updateUser(
+    _.assign({}, user, { updatedAt: new Date().getTime() })
+  );
+  sessionProvider.set(
+    configProvider.getConfig().appId,
+    JSON.stringify({ user: updatedUser })
+  );
+  const mainChannel = getMainChannel(this.state.channels);
   this.setState({
-    channels: updateItemInCollection(this.state.channels, {id: mainChannel, isCollapsed: false }),
+    channels: updateItemInCollection(this.state.channels, {
+      id: mainChannel,
+      isCollapsed: false
+    }),
     activeTab: mainChannel,
     currentUser: updatedUser
   });
 }
 
 async function toggleChannelWindowExpanded(channelId, removeChat) {
-  const newState = {}
+  const newState = {};
   if (removeChat) {
     await ChannelAPI.removeChannel(channelId);
-    newState.channels =  _.filter(this.state.channels, channel => channel.id !== channelId);
+    newState.channels = _.filter(
+      this.state.channels,
+      channel => channel.id !== channelId
+    );
     newState.activeTab = getMainChannel(newState.channels);
   } else {
-    const isCollapsed = _.find(this.state.channels, {id: channelId}).isCollapsed;
-    newState.channels = updateItemInCollection(this.state.channels, {id: channelId, isCollapsed: !isCollapsed })
+    const isCollapsed = _.find(this.state.channels, { id: channelId })
+      .isCollapsed;
+    newState.channels = updateItemInCollection(this.state.channels, {
+      id: channelId,
+      isCollapsed: !isCollapsed
+    });
   }
   this.setState(newState);
 }
@@ -252,10 +316,10 @@ async function toggleChannelWindowExpanded(channelId, removeChat) {
 class App extends Component {
   constructor() {
     super();
-    console.log()
+    console.log();
     this.state = {
       unreadChannels: {},
-      activeTab: '',
+      activeTab: "",
       openTabs: {
         usersList: !isMobileDevice()
       },
@@ -272,47 +336,54 @@ class App extends Component {
       ChannelAPI.onPublicChannelsChanges(channelsDataRetrieved.bind(this));
       WidgetAPI.onWidgetChanges(widgetDataChanged.bind(this));
       listenToUsersChanges.call(this);
-    }
+    };
 
-    resetListeners()
+    resetListeners();
 
-    const self = this
+    const self = this;
     window.changeWidgetProps = uiProps => {
       self.setState({
         uiProps
-      })
-    }
+      });
+    };
     window.changeAppId = appId => {
       self.setState({
         activeTab: null,
         appId
-      })
-      resetListeners()
-    }
+      });
+      resetListeners();
+    };
   }
 
   componentDidMount() {
-    ReportAPI.reportEvent('widget_view')
+    ReportAPI.reportEvent("widget_view");
   }
-  
+
   render() {
     return this.state.uiProps ? (
-      <div dir="ltr" className={`App ${this.state.uiProps.theme || ''} ${this.state.uiProps.layout || ''}`}>
-        <Chat user={this.state.currentUser}
-              title = {this.state.uiProps.title}
-              channels={this.state.channels}
-              activeUsers={this.state.activeUsers}
-              openTabs={this.state.openTabs}
-              authState={this.state.authState}
-              unreadChannels={this.state.unreadChannels}
-              activeTab={this.state.activeTab}
-              toggleChannelWindowExpanded={toggleChannelWindowExpanded.bind(this)}
-              switchActiveTab={switchActiveTab.bind(this)}
-              loginUser={loginUser.bind(this)}
-              updateUser={updateUser.bind(this)}>
-        </Chat>
+      <div
+        dir="ltr"
+        className={`App ${this.state.uiProps.theme || ""} ${this.state.uiProps
+          .layout || ""}`}
+      >
+        <Chat
+          user={this.state.currentUser}
+          title={this.state.uiProps.title}
+          channels={this.state.channels}
+          activeUsers={this.state.activeUsers}
+          openTabs={this.state.openTabs}
+          authState={this.state.authState}
+          unreadChannels={this.state.unreadChannels}
+          activeTab={this.state.activeTab}
+          toggleChannelWindowExpanded={toggleChannelWindowExpanded.bind(this)}
+          switchActiveTab={switchActiveTab.bind(this)}
+          loginUser={loginUser.bind(this)}
+          updateUser={updateUser.bind(this)}
+        ></Chat>
       </div>
-    ) : (<div></div>);
+    ) : (
+      <div></div>
+    );
   }
 }
 

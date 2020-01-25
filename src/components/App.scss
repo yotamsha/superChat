@@ -1,4 +1,3 @@
-
 #root-aoxie43dhjf456fkloia39 {
   @import "./../css/variables.scss";
   @import "./../css/themes/dark.scss";
@@ -11,12 +10,50 @@
   .App {
     direction: ltr;
     //-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol"
-    font-family: -apple-system, BlinkMacSystemFont, 'quicksand', sans-serif, Arial;
-    h1, h2, h3, h4, h5, h6, ul, li, input ,button, a {
-      all:unset;
+    font-family: -apple-system, BlinkMacSystemFont, "quicksand", sans-serif,
+      Arial;
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    ul,
+    li,
+    input,
+    button,
+    a {
+      all: unset;
       font-weight: normal;
     }
-    blockquote, button, caption, dd, dl, fieldset, figure, form, iframe, input, h1, h2, h3, h4, h5, h6, hr, label, legend, ol, optgroup, p, pre, table, td, textarea, th, ul {
+    blockquote,
+    button,
+    caption,
+    dd,
+    dl,
+    fieldset,
+    figure,
+    form,
+    iframe,
+    input,
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    hr,
+    label,
+    legend,
+    ol,
+    optgroup,
+    p,
+    pre,
+    table,
+    td,
+    textarea,
+    th,
+    ul {
       margin: 0;
       padding: 0;
     }
@@ -27,7 +64,8 @@
       margin: 0;
     }
     button {
-      font-family: -apple-system, BlinkMacSystemFont, 'quicksand', sans-serif, Arial;
+      font-family: -apple-system, BlinkMacSystemFont, "quicksand", sans-serif,
+        Arial;
       text-align: left;
     }
     * {
@@ -35,16 +73,20 @@
       -webkit-box-sizing: initial;
     }
 
-    ::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+    ::-webkit-input-placeholder {
+      /* Chrome/Opera/Safari */
       color: #b1b1b1;
     }
-    ::-moz-placeholder { /* Firefox 19+ */
+    ::-moz-placeholder {
+      /* Firefox 19+ */
       color: #b1b1b1;
     }
-    :-ms-input-placeholder { /* IE 10+ */
+    :-ms-input-placeholder {
+      /* IE 10+ */
       color: #b1b1b1;
     }
-    :-moz-placeholder { /* Firefox 18- */
+    :-moz-placeholder {
+      /* Firefox 18- */
       color: #b1b1b1;
     }
 
@@ -54,7 +96,7 @@
   }
 
   .chat {
-    z-index:9998;
+    z-index: 9998;
     .nav-bar {
       z-index: 10000;
       position: fixed;
@@ -89,7 +131,7 @@
           height: 40px;
           min-width: 80px;
           border-radius: 3px;
-          border: 1px solid #3F51B5;
+          border: 1px solid #3f51b5;
           padding: 0px 10px 0px 10px;
           margin: 5px 5px 10px 5px;
           background-color: #ffffff;
@@ -115,7 +157,6 @@
           }
 
           &.expanded {
-
           }
           &:hover {
             color: #ffffff;
@@ -144,11 +185,11 @@
       bottom: 69px;
       left: 0px;
       @include media-max($layout-breakpoint-sm) {
-        top:0;
+        top: 0;
         right: 0;
       }
       .app-tab {
-        z-index:10000;
+        z-index: 10000;
         background-color: #ffffff;
         height: 450px;
         width: 400px;
@@ -162,10 +203,10 @@
 
         @include media-max($layout-breakpoint-sm) {
           left: 0;
-          top:0;
+          top: 0;
           width: 100%;
           height: 100%;
-          bottom:0px;
+          bottom: 0px;
           border-radius: initial;
         }
 
@@ -263,7 +304,14 @@
                   margin-bottom: 10px;
                   background-color: #e4e1e1;
                 }
-
+                .time {
+                  display: inline-block;
+                  color: #7b7575;
+                  font-size: 11px;
+                }
+                .msg-text {
+                  display: block;
+                }
                 &.me {
                   justify-content: flex-end;
                   .msg-content {
@@ -275,10 +323,8 @@
                   &:hover {
                     text-decoration: underline;
                   }
-
                 }
                 .username {
-                  display: block;
                   font-weight: bold;
                   font-size: 14px;
 
@@ -362,7 +408,7 @@
               -ms-flex: 0 0;
               background-color: #efefef;
               flex: 0 0;
-              transition: all .25s ease;
+              transition: all 0.25s ease;
 
               .list-container {
                 .emoji-mart {
@@ -377,7 +423,7 @@
                       width: 100%;
                       padding: 5px 6px;
                       background-color: #fff;
-                      background-color: rgba(255, 255, 255, .95);
+                      background-color: rgba(255, 255, 255, 0.95);
                       font-size: 14px;
                       color: #b1b1b1;
                       font-weight: normal;
@@ -441,10 +487,9 @@
               margin-left: 15px;
             }
           }
-
         }
         &.users-list-tab {
-          transition: all .25s ease;
+          transition: all 0.25s ease;
           width: 200px;
           border-radius: initial;
           background-color: $primary-color;
@@ -456,7 +501,6 @@
           @include media-max($layout-breakpoint-sm) {
             left: 0;
             position: fixed;
-
           }
 
           .users-list {
@@ -465,7 +509,6 @@
             padding: 15px;
             font-size: 15px;
             .list-title {
-
             }
             .user {
               text-align: left;
@@ -484,7 +527,7 @@
                 &.me {
                   cursor: initial;
                   font-style: italic;
-                  font-weight: normal; 
+                  font-weight: normal;
                 }
               }
             }
@@ -493,6 +536,4 @@
       }
     }
   }
-
-
 }

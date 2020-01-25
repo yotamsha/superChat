@@ -1,12 +1,13 @@
-import React, {Component} from 'react';
-import _ from 'lodash';
-import PropTypes from 'prop-types';
-import appPropTypes from './appPropTypes';
-import FontAwesome from 'react-fontawesome';
-import 'emoji-mart/css/emoji-mart.css'
-import { Picker } from 'emoji-mart'
+import React, { Component } from "react";
+import _ from "lodash";
+import PropTypes from "prop-types";
+import appPropTypes from "./appPropTypes";
+import FontAwesome from "react-fontawesome";
+import "emoji-mart/css/emoji-mart.css";
+import { Picker } from "emoji-mart";
+import prettydate from "pretty-date";
 
-const {messageType, userType} = appPropTypes;
+const { messageType, userType } = appPropTypes;
 
 function getUsersStr(currentUserId, users) {
   // return _.reduce(users, (str, user) => {
@@ -14,16 +15,16 @@ function getUsersStr(currentUserId, users) {
   //   return str;
   // }, '').slice(0, -2)
   if (!users) {
-    return '';
+    return "";
   }
-  const otherUser = _.find(users, user => user.id !== currentUserId)
-  return 'Me, ' + otherUser.username;
+  const otherUser = _.find(users, user => user.id !== currentUserId);
+  return "Me, " + otherUser.username;
 }
 
 class Channel extends Component {
   constructor() {
     super();
-    this.currentMessage = '';
+    this.currentMessage = "";
     this.state = {
       emojisListOpen: false
     };
@@ -59,11 +60,11 @@ class Channel extends Component {
     }
 
     await this.props.onSubmitMessage(msg, channelId);
-    this.currentMessage = ''
-    this.messageInputRef.value = ''
+    this.currentMessage = "";
+    this.messageInputRef.value = "";
     this.setState({
       emojisListOpen: false
-    })
+    });
   }
 
   componentDidMount() {
@@ -76,15 +77,15 @@ class Channel extends Component {
 
   getTitle() {
     if (this.props.isPublic) {
-      return this.props.name || '';
+      return this.props.name || "";
     }
-    return getUsersStr(this.props.currentUser.id, this.props.members)
+    return getUsersStr(this.props.currentUser.id, this.props.members);
   }
 
   openCloseEmojisList() {
     this.setState({
       emojisListOpen: !this.state.emojisListOpen
-    })
+    });
   }
 
   addChar(char) {
@@ -94,34 +95,70 @@ class Channel extends Component {
 
   render() {
     return (
-      <div className={`app-tab channel-tab ${this.props.isCollapsed ? 'collapsed' : ''} ${this.props.isCollapsed === false ? 'expanded' : ''} ${this.props.isActive ? 'active' : ''}`}>
+      <div
+        className={`app-tab channel-tab ${
+          this.props.isCollapsed ? "collapsed" : ""
+        } ${this.props.isCollapsed === false ? "expanded" : ""} ${
+          this.props.isActive ? "active" : ""
+        }`}
+      >
         <div className="tab-header">
           <h3 className="tab-title">{`${this.getTitle()}`}</h3>
           <div className="header-actions-btns">
-            {!this.props.isPublic &&
-            <button className="btn close" onClick={() => this.props.toggleChannelWindowExpanded(this.props.id, true)}>
-              <FontAwesome name='close' />
-            </button>}
-            <button className="btn minimize" onClick={() => this.props.toggleChannelWindowExpanded(this.props.id)}>
-              <FontAwesome name='window-minimize' />
+            {!this.props.isPublic && (
+              <button
+                className="btn close"
+                onClick={() =>
+                  this.props.toggleChannelWindowExpanded(this.props.id, true)
+                }
+              >
+                <FontAwesome name="close" />
+              </button>
+            )}
+            <button
+              className="btn minimize"
+              onClick={() =>
+                this.props.toggleChannelWindowExpanded(this.props.id)
+              }
+            >
+              <FontAwesome name="window-minimize" />
             </button>
           </div>
         </div>
 
         <div className="tab-messages">
-          <ul className="messages" ref={(el) => this.messageList = el}>
+          <ul className="messages" ref={el => (this.messageList = el)}>
             {_.map(this.props.messages, msg => {
               const ownerMsg = msg.user.id === this.props.currentUser.id;
 
-              return <li className={'msg-row ' + (ownerMsg ? 'me' : '')} key={msg.id}>
-                <div className="msg-content">
-                  {ownerMsg ? '' :
-                    (<a className="username other"
-                        onClick={() => this.props.openNewChannel([this.props.currentUser.id, msg.user.id])}>
-                      {msg.user.username}</a>)}
-                  {msg.text}
-                </div>
-              </li>
+              return (
+                <li
+                  className={"msg-row " + (ownerMsg ? "me" : "")}
+                  key={msg.id}
+                >
+                  <div className="msg-content">
+                    {ownerMsg ? (
+                      ""
+                    ) : (
+                      <a
+                        className="username other"
+                        onClick={() =>
+                          this.props.openNewChannel([
+                            this.props.currentUser.id,
+                            msg.user.id
+                          ])
+                        }
+                      >
+                        {msg.user.username}
+                      </a>
+                    )}
+                    <span className="msg-text">{msg.text}</span>
+                    <span className="time">
+                      {prettydate.format(new Date(msg.createdAt))}
+                    </span>
+                  </div>
+                </li>
+              );
             })}
             {/* <li className="chatters-ad">
               <span>Created by
@@ -131,32 +168,52 @@ class Channel extends Component {
               </a>
             </li> */}
           </ul>
-          <div className={'emojis-list ' + (this.state.emojisListOpen ? 'open' : '')}>
+          <div
+            className={
+              "emojis-list " + (this.state.emojisListOpen ? "open" : "")
+            }
+          >
             <div className="list-container">
-              <Picker showPreview="false" onSelect={emoji => this.addChar(emoji.native)} color="#3F51B5"/>
+              <Picker
+                showPreview="false"
+                onSelect={emoji => this.addChar(emoji.native)}
+                color="#3F51B5"
+              />
             </div>
           </div>
           <div className="message-input">
             <div className="flex-cont">
               <div className="input-cont">
-                <input defaultValue={this.currentMessage} placeholder="Type your message"
-                       ref={(ref) => this.messageInputRef= ref}
-                       onKeyPress={(e) => {
-                         if (e.key === 'Enter') {
-                           this.submitMessage(this.currentMessage, this.props.id)
-                         }
-                       }}
-                       onChange={(event) => this.currentMessage = event.target.value}></input>
+                <input
+                  defaultValue={this.currentMessage}
+                  placeholder="Type your message"
+                  ref={ref => (this.messageInputRef = ref)}
+                  onKeyPress={e => {
+                    if (e.key === "Enter" && this.currentMessage !== "") {
+                      this.submitMessage(this.currentMessage, this.props.id);
+                    }
+                  }}
+                  onChange={event => (this.currentMessage = event.target.value)}
+                ></input>
               </div>
               <div className="buttons-cont">
-                <button className="emojis-btn" onClick={this.openCloseEmojisList.bind(this)}><FontAwesome name='smile-o'/></button>
-                <button type="submit" onClick={() => this.submitMessage(this.currentMessage, this.props.id)}>
-                  <FontAwesome name='send' />
+                <button
+                  className="emojis-btn"
+                  onClick={this.openCloseEmojisList.bind(this)}
+                >
+                  <FontAwesome name="smile-o" />
+                </button>
+                <button
+                  type="submit"
+                  onClick={() =>
+                    this.submitMessage(this.currentMessage, this.props.id)
+                  }
+                >
+                  <FontAwesome name="send" />
                 </button>
               </div>
             </div>
           </div>
-
         </div>
       </div>
     );
